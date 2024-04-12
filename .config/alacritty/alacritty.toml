@@ -3,15 +3,15 @@ live_config_reload = true
 [window]
 decorations = "buttonless"
 dynamic_padding = false
-opacity = 0.4
+opacity = 0.6
 blur = true
 
 [window.padding]
-x = 5
-y = 15
+x = 2
+y = 2
 
 [font]
-size = 14.0
+size = 8.0
 
 [font.bold]
 family = "JetBrainsMono NF"
