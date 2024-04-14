@@ -1,0 +1,6 @@
+# open alacritty
+cmd - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
+# open firefox
+cmd - b      : /Applications/Firefox.app/Contents/MacOS/firefox
+# fullscreen
+alt - f      : yabai -m window --toggle zoom-fullscreen
