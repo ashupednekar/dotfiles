@@ -49,7 +49,8 @@ floating_modifier $mod
 # start a terminal
 bindsym $mod+Return exec alacritty
 bindsym $mod+b exec firefox
-
+bindsym $mod+t exec teams-for-linux
+bindsym $mod+o exec obsidian
 # kill focused window
 bindsym $mod+Shift+q kill
 
@@ -190,5 +191,5 @@ bar {
 
 default_orientation vertical
 
-exec_always --no-startup-id picom &
+#exec_always --no-startup-id picom &
 default_border pixel 0 
