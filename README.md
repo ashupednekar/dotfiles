@@ -1,4 +1,4 @@
-# Dotfiles
+# Ashu's Dotfiles
 
 This repository contains configuration files for various applications and tools commonly used on Linux and macOS systems.
 
