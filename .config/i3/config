@@ -208,6 +208,7 @@ default_orientation vertical
 gaps inner 5
 gaps outer 5
 
-exec_always -no-startup-id picom -b --experimental-backend
+exec_always --no-startup-id picom -b 
+# --experimental-backend
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh --shapes
 default_border pixel 0 
