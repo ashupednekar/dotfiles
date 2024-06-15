@@ -1,0 +1,13 @@
+[user]
+  name = ashupednekar
+  email = ashutoshpednekar15@gmail.com
+  signingkey = ~/.ssh/ashupednekar
+
+[commit]
+  gpgsign = true
+
+[gpg]
+  format = ssh
+
+[includeIf "gitdir:~/work/"]
+  path = ~/.gitconfig-work

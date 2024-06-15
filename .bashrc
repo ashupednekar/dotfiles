@@ -2,8 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-PATH="$HOME/.local/bin:$PATH"
-
 # If not running interactively, don't do anything
 case $- in
 *i*) ;;
@@ -116,25 +114,27 @@ if ! shopt -oq posix; then
 		. /etc/bash_completion
 	fi
 fi
+
+feh --bg-fill ~/wallpapers/goodwallaper.jpg
+
+alias cd=z
 alias vi=nvim
+alias k=kubectl
+
+export KUBE_EDITOR=nvim
+
+export PATH="/home/ashu/.cargo/bin:$PATH"
+export PATH="/snap/bin/go:$PATH"
+export PATH="$HOME/go/bin/:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
-. "$HOME/.cargo/env"
-
-source "$HOME/.cargo/env"
-
-alias wallpaper="feh --randomize --bg-fill ~/wallpapers/"
-
-(
-	echo
-	echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"'
-) >>/home/ashu/.bashrc
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-export PATH=/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:/home/ashu/.nvm/versions/node/v21.7.2/bin:/home/ashu/.local/bin:/home/ashu/.cargo/bin:/home/ashu/.local/bin:/home/ashu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/usr/local/go/bin
 
 eval "$(zoxide init bash)"
 
-alias cd=z
-alias k=kubectl
+alias nats='nats -s localhost:30042'
+alias psql="docker exec -it postgres psql -U consoleuser -d console"
+alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
