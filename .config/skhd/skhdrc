@@ -1,6 +1,10 @@
 # open alacritty
-cmd - return : /Applications/Alacritty.app/Contents/MacOS/alacritty
+cmd - return      : /Applications/Alacritty.app/Contents/MacOS/alacritty
 # open firefox
-cmd - b      : /Applications/Firefox.app/Contents/MacOS/firefox
+cmd - b           : /Applications/Safari.app/Contents/MacOS/Safari
 # fullscreen
-alt - f      : yabai -m window --toggle zoom-fullscreen
+alt - f           : yabai -m window --toggle zoom-fullscreen
+
+cmd - z           : yabai -m window --insert east
+
+cmd - x          : yabai -m window --insert south
