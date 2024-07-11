@@ -1,0 +1,9 @@
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      "space space": "file_finder::Toggle",
+      "esc e": "file_finder::Toggle"
+    }
+  }
+]
