@@ -7,3 +7,6 @@ vim.keymap.set('n', '<leader>fh', telescope.help_tags, {})
 
 --neotree
 vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
+
+--lazy
+vim.keymap.set('n', '<leader>L', ':Lazy', { noremap = true, silent = true })
