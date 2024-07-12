@@ -36,12 +36,4 @@ require("lazy").setup({
   checker = { enabled = true },
 })
 
-require("catppuccin").setup()
-vim.cmd.colorscheme "catppuccin"
-
-local config = require("nvim-treesitter.configs")
-config.setup({
-  ensure_installed = {"lua", "rust", "python", "go"},
-  highlight = { enable = true },
-  indent = { enable = true },
-})
+require("lualine").setup()

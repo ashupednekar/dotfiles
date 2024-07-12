@@ -48,15 +48,6 @@ return {
   -- you can use the VeryLazy event for things that can
   -- load later and are not important for the initial UI
   { "stevearc/dressing.nvim", event = "VeryLazy" },
-
-  {
-    "Wansmer/treesj",
-    keys = {
-      { "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
-    },
-    opts = { use_default_keymaps = false, max_join_length = 150 },
-  },
-
   {
     "monaqa/dial.nvim",
     -- lazy-load on keys
@@ -74,5 +65,6 @@ return {
   -- This will use {config.dev.path}/noice.nvim/ instead of fetching it from GitHub
   -- With the dev option, you can easily switch between the local and installed version of a plugin
   { "folke/noice.nvim", dev = true },
+  
 
 }
