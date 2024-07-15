@@ -25,7 +25,6 @@ vim.wo.relativenumber = true
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
-    'neovim/nvim-lspconfig',
     -- import your plugins
     { import = "plugins" },
   },
