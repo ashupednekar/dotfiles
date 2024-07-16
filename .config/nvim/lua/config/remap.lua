@@ -1,3 +1,4 @@
+
 --telescope
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader><leader>', telescope.find_files, {})
@@ -14,19 +15,13 @@ vim.api.nvim_set_keymap('n', '<C-Down>', ':resize -2<CR>', { noremap = true, sil
 vim.api.nvim_set_keymap('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +2<CR>', { noremap = true, silent = true })
 
-
 --neotree
 vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
 
---lazy
-vim.keymap.set('n', '<leader>L', ':Lazy', { noremap = true, silent = true })
-
---truezen
-local api = vim.api
-
-api.nvim_set_keymap("n", "<leader>zn", ":TZNarrow<CR>", {})
-api.nvim_set_keymap("v", "<leader>zn", ":'<,'>TZNarrow<CR>", {})
-api.nvim_set_keymap("n", "<leader>zf", ":TZFocus<CR>", {})
-api.nvim_set_keymap("n", "<leader>zm", ":TZMinimalist<CR>", {})
-api.nvim_set_keymap("n", "<leader>za", ":TZAtaraxis<CR>", {})
-
+--yank
+vim.opt.clipboard = "unnamedplus"
+-- Remap yank and paste to use the clipboard by default
+vim.keymap.set({'n', 'v'}, 'y', '"+y')
+vim.keymap.set('n', 'Y', '"+Y')
+vim.keymap.set({'n', 'v'}, 'p', '"+p')
+vim.keymap.set({'n', 'v'}, 'P', '"+P')

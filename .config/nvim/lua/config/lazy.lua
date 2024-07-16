@@ -35,4 +35,3 @@ require("lazy").setup({
   checker = { enabled = true },
 })
 
-require("lualine").setup()
