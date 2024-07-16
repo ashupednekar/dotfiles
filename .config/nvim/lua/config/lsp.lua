@@ -8,6 +8,9 @@ end)
 
 lsp.setup()
 
+
+equire('nvim-autopairs').setup{}
+
 require('mason').setup({})
 require('mason-lspconfig').setup({
   ensure_installed = {"gopls", "rust_analyzer", "pyright"},
@@ -19,8 +22,8 @@ require('mason-lspconfig').setup({
 })
 
 
-local cmp = require('cmp')
 
+local cmp = require('cmp')
 cmp.setup({
     sources = {
         { name = 'nvim_lsp' },
