@@ -1,3 +1,3 @@
 require('config.lazy')
-require("config.catppuccin")
+require("config.appearance")
 require('config.remap')
