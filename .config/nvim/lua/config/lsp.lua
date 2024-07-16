@@ -13,7 +13,7 @@ require('nvim-autopairs').setup{}
 
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = {"gopls", "rust_analyzer", "pyright"},
+  ensure_installed = {"go", "gopls", "rust_analyzer", "pyright", "ast-grep"},
   handlers = {
     function(server_name)
       require('lspconfig')[server_name].setup({})
@@ -22,6 +22,20 @@ require('mason-lspconfig').setup({
 })
 
 
+local util = require'lspconfig.util'
+require('lspconfig').gopls.setup{
+ root_dir = function(fname)
+      -- see: https://github.com/neovim/nvim-lspconfig/issues/804
+      local mod_cache = vim.trim(vim.fn.system 'go env GOMODCACHE')
+      if fname:sub(1, #mod_cache) == mod_cache then
+         local clients = vim.lsp.get_active_clients { name = 'gopls' }
+         if #clients > 0 then
+            return clients[#clients].config.root_dir
+         end
+      end
+      return util.root_pattern 'go.work'(fname) or util.root_pattern('go.mod', '.git')(fname)
+   end,
+}
 
 local cmp = require('cmp')
 cmp.setup({
