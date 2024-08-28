@@ -15,6 +15,7 @@ vim.o.expandtab = true
 
 --split
 vim.api.nvim_set_keymap('n', '<Leader>|', ':vsplit<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<Leader>_', ':split<CR>', { noremap = true, silent = true })
 
 --resize
 vim.api.nvim_set_keymap('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })

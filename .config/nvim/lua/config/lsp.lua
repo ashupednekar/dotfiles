@@ -22,6 +22,17 @@ require('mason-lspconfig').setup({
 
 
 local util = require'lspconfig.util'
+
+require('lspconfig').rust_analyzer.setup{
+  settings = {
+    ["rust-analyzer"] = {
+        cargo = {
+            allFeatures = true,
+            },
+        },
+  },
+}
+
 require('lspconfig').gopls.setup{
  root_dir = function(fname)
       -- see: https://github.com/neovim/nvim-lspconfig/issues/804
@@ -53,6 +64,16 @@ cmp.setup({
         expand = function(args)
             require('luasnip').lsp_expand(args.body)
         end
-    }
+    },
+    formatting = {
+        format = function(entry, vim_item)
+            -- Set the details in the completion window
+            vim_item.menu = ({
+                nvim_lsp = "[LSP]",
+                luasnip = "[Snippet]",
+            })[entry.source.name]
+            return vim_item
+        end
+    },
 })
 
