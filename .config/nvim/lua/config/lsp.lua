@@ -22,18 +22,32 @@ require('mason-lspconfig').setup({
 
 
 local util = require'lspconfig.util'
+local lspconfig = require'lspconfig'
 
-require('lspconfig').rust_analyzer.setup{
+local on_attach = function(client, bufnr)
+  local opts = { noremap = true, silent = true, buffer = bufnr }
+  -- LSP Keybindings
+  vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+  vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+  vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+  vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+  vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+  vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+end
+
+lspconfig.rust_analyzer.setup{
+  on_attach=on_attach,
   settings = {
     ["rust-analyzer"] = {
         cargo = {
-            allFeatures = true,
+            allFeatures = false,
             },
         },
   },
 }
 
-require('lspconfig').gopls.setup{
+lspconfig.gopls.setup{
+ on_attach=on_attach,
  root_dir = function(fname)
       -- see: https://github.com/neovim/nvim-lspconfig/issues/804
       local mod_cache = vim.trim(vim.fn.system 'go env GOMODCACHE')
@@ -45,6 +59,20 @@ require('lspconfig').gopls.setup{
       end
       return util.root_pattern 'go.work'(fname) or util.root_pattern('go.mod', '.git')(fname)
    end,
+}
+
+lspconfig.pyright.setup{
+  on_attach=on_attach,
+  settings = {
+    python = {
+      analysis = {
+        typeCheckingMode = "off", -- or "strict" for more detailed checks
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        diagnosticMode = "workspace",
+      },
+    },
+  },
 }
 
 local cmp = require('cmp')
