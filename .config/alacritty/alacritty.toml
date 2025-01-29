@@ -1,9 +1,7 @@
-live_config_reload = true
-
 [window]
 decorations = "buttonless"
 dynamic_padding = false
-opacity = 0.6
+opacity = 0.86
 blur = true
 
 [window.padding]
@@ -11,7 +9,7 @@ x = 2
 y = 2
 
 [font]
-size = 8.0
+size = 7.0
 
 [font.bold]
 family = "JetBrainsMono NF"
@@ -28,3 +26,6 @@ style = "Italic"
 [font.normal]
 family = "JetBrainsMono NF"
 style = "Regular"
+
+[general]
+live_config_reload = true
