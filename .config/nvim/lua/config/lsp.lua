@@ -12,7 +12,7 @@ lsp.setup()
 require('nvim-autopairs').setup{}
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = {"go", "gopls", "rust_analyzer", "pyright", "ast-grep"},
+  ensure_installed = {"go", "gopls", "rust_analyzer", "pyright", "ast-grep", "zls"},
   handlers = {
     function(server_name)
       require('lspconfig')[server_name].setup({})
@@ -60,6 +60,8 @@ lspconfig.gopls.setup{
       return util.root_pattern 'go.work'(fname) or util.root_pattern('go.mod', '.git')(fname)
    end,
 }
+
+lspconfig.zls.setup{}
 
 lspconfig.pyright.setup{
   on_attach=on_attach,
