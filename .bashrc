@@ -115,7 +115,7 @@ if ! shopt -oq posix; then
 	fi
 fi
 
-feh --bg-fill ~/wallpapers/goodwallaper.jpg
+feh --bg-fill ~/wallpapers/goodwallpaper.png
 
 alias cd=z
 alias vi=nvim
@@ -138,7 +138,6 @@ alias psql="docker exec -it postgres psql -U consoleuser -d console"
 alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-eval "$(starship init bash)"
 
 source ~/.gitenv
 . "$HOME/.cargo/env"
