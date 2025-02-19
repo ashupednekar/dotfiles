@@ -5,7 +5,7 @@ esac
 
 export OSH='/home/ashu/.oh-my-bash'
 
-OSH_THEME="font"
+OSH_THEME="pure"
 
 OMB_USE_SUDO=true
 
