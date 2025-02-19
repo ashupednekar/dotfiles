@@ -40,7 +40,6 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
 eval "$(zoxide init bash)"
 
-alias cd=z
 alias vi=nvim
 alias k=kubectl
 alias nats='nats -s localhost:30042'
@@ -52,3 +51,4 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source ~/.gitenv
 . "$HOME/.cargo/env"
 
+alias cd=z
