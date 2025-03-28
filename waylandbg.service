@@ -1,0 +1,14 @@
+[Unit]
+Description=wayland bg stuff
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/waylandbg.sh
+Restart=always
+User=root
+WorkingDirectory=/usr/local/bin
+StandardOutput=append:/var/log/my_script.log
+StandardError=append:/var/log/my_script.log
+
+[Install]
+WantedBy=multi-user.target
