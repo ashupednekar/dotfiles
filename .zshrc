@@ -1,5 +1,5 @@
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="af-magic"
+ZSH_THEME="candy"
 CASE_SENSITIVE="true"
 
 DISABLE_MAGIC_FUNCTIONS="true"
@@ -8,7 +8,8 @@ DISABLE_AUTO_TITLE="true"
 plugins=(git)
 source $ZSH/oh-my-zsh.sh
 
-. "$HOME/.cargo/env"            [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+. "$HOME/.cargo/env"            
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 source $HOME/.cargo/env
 
@@ -30,12 +31,19 @@ export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin:$HOME/.local/bin"
 export PATH="/Users/ashutoshpednekar/.rd/bin:$PATH"
 export MODULAR_HOME="/Users/ashutoshpednekar/.modular"
 export PATH="/Users/ashutoshpednekar/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
+export PATH=$PATH:$HOME/Library/Android/platform-tools
 
 
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+export MOZ_DISABLE_SAFE_MODE_KEY=1
 
 alias lc=leetcode
 
 export APP_PASSWORD='vzzi lhaq khan lsar'
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/Users/ashutoshpednekar/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
