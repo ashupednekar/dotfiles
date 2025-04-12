@@ -1,7 +1,8 @@
 # open alacritty
 alt - return      : /Applications/Alacritty.app/Contents/MacOS/alacritty
-# open firefox
-alt - b           : /Applications/Safari.app/Contents/MacOS/Safari
+# open zen 
+alt - b           : /Applications/Zen\ Browser.app/Contents/MacOS/zen
+
 # fullscreen
 alt - f           : yabai -m window --toggle zoom-fullscreen
 
