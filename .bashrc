@@ -16,6 +16,7 @@ alias k=kubectl
 alias nats='nats -s localhost:30042'
 alias psql="docker exec -it postgres psql -U consoleuser -d console"
 alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
+export _ZO_DOCTOR=0
 
 eval "$(starship init bash)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
