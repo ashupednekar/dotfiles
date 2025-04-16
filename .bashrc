@@ -1,34 +1,4 @@
-case $- in
-  *i*) ;;
-    *) return;;
-esac
-
-export OSH='/home/ashu/.oh-my-bash'
-
-OSH_THEME="pure"
-
-OMB_USE_SUDO=true
-
-completions=(
-  git
-  composer
-  ssh
-)
-
-aliases=(
-  general
-)
-
-plugins=(
-  git
-  bashmarks
-)
-z
-source "$OSH"/oh-my-bash.sh
-
 feh --bg-fill ~/wallpapers/goodwallpaper.png
-
-
 export KUBE_EDITOR=nvim
 
 export PATH="/home/ashu/.cargo/bin:$PATH"
@@ -47,6 +17,7 @@ alias nats='nats -s localhost:30042'
 alias psql="docker exec -it postgres psql -U consoleuser -d console"
 alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
 
+eval "$(starship init bash)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 source ~/.gitenv
