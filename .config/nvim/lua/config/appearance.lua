@@ -3,6 +3,19 @@ require("lualine").setup{
     theme = 'iceberg_dark',
     section_separators = { left = '', right = '' },
     component_separators = { left = '', right = '' }
+  },
+  sections = {
+    lualine_c = {
+      {
+        function()
+          local filepath = vim.fn.expand('%:p')
+          local cwd = vim.fn.getcwd()
+          return filepath:gsub(cwd .. '/', '')
+        end,
+        color = { fg = '#88C0D0' }, -- optional styling
+        icon = '📁', -- optional icon
+      }
+    }
   }
 }
 

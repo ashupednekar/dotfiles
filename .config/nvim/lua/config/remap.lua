@@ -24,7 +24,7 @@ vim.api.nvim_set_keymap('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = 
 vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +2<CR>', { noremap = true, silent = true })
 
 --neotree
-vim.keymap.set('n', '<leader>e', ':Neotree toggle<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>e', '<CR>:Oil<CR>', { noremap = true, silent = true })
 
 --yank
 vim.opt.clipboard = "unnamedplus"
