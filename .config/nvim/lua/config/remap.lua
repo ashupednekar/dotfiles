@@ -38,7 +38,7 @@ vim.api.nvim_set_keymap('n', '<c-h>', ':vertical resize -2<cr>', { noremap = tru
 vim.api.nvim_set_keymap('n', '<c-l>', ':vertical resize +2<cr>', { noremap = true, silent = true })
 
 --oil
-vim.keymap.set('n', '<leader>e', '<cr>:oil<cr>', { noremap = true, silent = true })
+vim.keymap.set('n', '<leader>e', '<cr>:Oil<cr>', { noremap = true, silent = true })
 
 --yank
 vim.opt.clipboard = "unnamedplus"
