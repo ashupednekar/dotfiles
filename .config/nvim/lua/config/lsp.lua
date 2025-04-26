@@ -1,5 +1,3 @@
-
-
 local lsp = require('lsp-zero').preset({})
 
 lsp.on_attach(function(client, bufnr)
@@ -85,6 +83,12 @@ cmp.setup({
     },
     mapping = {
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['j'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['k'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<Up>'] = cmp.config.disable,
+        ['<Down>'] = cmp.config.disable,
+        ['<Left>'] = cmp.config.disable,
+        ['<Right>'] = cmp.config.disable,
     },
     window = {
         completion = cmp.config.window.bordered(),
