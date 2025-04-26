@@ -19,6 +19,24 @@ vim.keymap.set('n', '<leader><leader>', telescope.find_files, {})
 vim.keymap.set('n', '<leader>/', telescope.live_grep, {})
 vim.keymap.set('n', '<leader>fb', telescope.buffers, {})
 vim.keymap.set('n', '<leader>fh', telescope.help_tags, {})
+telescope.setup({
+  defaults = {
+    mappings = {
+      i = { -- insert mode
+        ["<C-h>"] = "which_key", -- optional: shows keymap hints
+        ["<C-j>"] = "move_selection_next",
+        ["<C-k>"] = "move_selection_previous",
+        ["<C-l>"] = "select_default",
+      },
+      n = { -- normal mode
+        ["h"] = "which_key",
+        ["j"] = "move_selection_next",
+        ["k"] = "move_selection_previous",
+        ["l"] = "select_default",
+      },
+    },
+  },
+})
 
 --tab
 -- Set tab spacing to 4 spaces
