@@ -32,10 +32,10 @@ vim.api.nvim_set_keymap('n', '<Leader>|', ':vsplit<CR>', { noremap = true, silen
 vim.api.nvim_set_keymap('n', '<Leader>_', ':split<CR>', { noremap = true, silent = true })
 
 --resize
-vim.api.nvim_set_keymap('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-Down>', ':resize -2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-Right>', ':vertical resize +2<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-k>', ':resize +2<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-j>', ':resize -2<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-h>', ':vertical resize -2<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C->', ':vertical resize +2<CR>', { noremap = true, silent = true })
 
 --neotree
 vim.keymap.set('n', '<leader>e', '<CR>:Oil<CR>', { noremap = true, silent = true })
