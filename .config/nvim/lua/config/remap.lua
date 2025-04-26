@@ -1,3 +1,5 @@
+-- disable mouse
+vim.o.mouse = ""
 
 --telescope
 local telescope = require('telescope.builtin')
