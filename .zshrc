@@ -1,49 +1,26 @@
-export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="candy"
-CASE_SENSITIVE="true"
+export KUBE_EDITOR=nvim
 
-DISABLE_MAGIC_FUNCTIONS="true"
-DISABLE_AUTO_TITLE="true"
-
-plugins=(git)
-source $ZSH/oh-my-zsh.sh
-
-. "$HOME/.cargo/env"            
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-source $HOME/.cargo/env
-
+export PATH="/home/ashu/.cargo/bin:$PATH"
+export PATH="/snap/bin/go:$PATH"
+export PATH="$HOME/go/bin/:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  
-eval "$(zoxide init zsh)"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                  
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
+eval "$(zoxide init bash)"
 
-source ~/.virtualenvs/base/bin/activate
 alias cd=z
 alias vi=nvim
 alias k=kubectl
-alias cat="bat --plain"
+alias nats='nats -s localhost:30042'
+alias psql="docker exec -it postgres psql -U consoleuser -d console"
+alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
+export _ZO_DOCTOR=0
 
-export GOPATH=$HOME/go
-export GOROOT="$(brew --prefix golang)/libexec"
-export PATH="$PATH:${GOPATH}/bin:${GOROOT}/bin:$HOME/.local/bin"
+eval "$(starship init zsh)"
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-export PATH="/Users/ashutoshpednekar/.rd/bin:$PATH"
-export MODULAR_HOME="/Users/ashutoshpednekar/.modular"
-export PATH="/Users/ashutoshpednekar/.modular/pkg/packages.modular.com_mojo/bin:$PATH"
-export PATH=$PATH:$HOME/Library/Android/platform-tools
+source ~/.gitenv
+. "$HOME/.cargo/env"
 
-
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
-export ANDROID_HOME=$HOME/Library/Android/sdk
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-export MOZ_DISABLE_SAFE_MODE_KEY=1
-
-alias lc=leetcode
-
-export APP_PASSWORD='vzzi lhaq khan lsar'
-
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/ashutoshpednekar/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+clear
