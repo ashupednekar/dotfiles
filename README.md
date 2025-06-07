@@ -4,7 +4,7 @@ This repository contains configuration files for various applications and tools 
 
 ## Included Configurations
 
-- **Alacritty**: Configuration for the Alacritty terminal emulator.
+- **Alacritty**: Configuration for the Alacritty terminal emulator. (P.S, recently switched to ghostty on mac, still prefer alacritty on linux rn...)
 - **i3**: Configuration for the i3 window manager.
 - **i3status**: Configuration for the i3status bar.
 - **Neovim**: Configuration for the Neovim text editor.
