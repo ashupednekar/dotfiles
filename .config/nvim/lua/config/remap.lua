@@ -2,7 +2,9 @@
 vim.o.mouse = ""
 
 -- escape remap to `
+vim.keymap.set("n", "<Tab>", "<Esc>", { noremap = true })
 vim.keymap.set("i", "<Tab>", "<Esc>", { noremap = true })
+vim.keymap.set("v", "<Tab>", "<Esc>", { noremap = true })
 
 -- disable arrow keys in normal, insert, and visual modes
 local opts = { noremap = true, silent = true }
