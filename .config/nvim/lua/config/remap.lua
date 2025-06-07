@@ -1,6 +1,9 @@
 -- disable mouse
 vim.o.mouse = ""
 
+-- escape remap to `
+vim.keymap.set('i', '`', '<esc>', { noremap = true})
+
 -- disable arrow keys in normal, insert, and visual modes
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', '<left>', '<nop>', opts)
