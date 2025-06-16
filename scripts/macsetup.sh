@@ -20,3 +20,15 @@ brew install --cask font-sf-mono
 brew install --cask font-sf-pro
 brew install --cask font-jetbrains-mono
 
+# Languages 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+brew install go
+brew install python@3.11
+
+# Misc 
+cargo install starship
+cargo install zoxide
+go install github.com/jesseduffield/lazygit@latest
+brew install --cask microsoft-teams
+brew install --cask rancher
+

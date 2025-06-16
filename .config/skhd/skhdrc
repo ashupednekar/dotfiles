@@ -52,6 +52,10 @@ cmd - 1 : yabai -m space --focus 1
 cmd - 2 : yabai -m space --focus 2 || echo "Space 2 doesn't exist"
 cmd - 3 : yabai -m space --focus 3 || echo "Space 3 doesn't exist" 
 cmd - 4 : yabai -m space --focus 4 || echo "Space 4 doesn't exist"
+cmd - 5 : yabai -m space --focus 5 || echo "Space 5 doesn't exist"
+cmd - 6 : yabai -m space --focus 6 || echo "Space 6 doesn't exist"
+cmd - 7 : yabai -m space --focus 7 || echo "Space 7 doesn't exist"
+cmd - 8 : yabai -m space --focus 8 || echo "Space 8 doesn't exist"
 cmd - tab : yabai -m space --focus recent
 
 # === Standard Text Editing Shortcuts ===
