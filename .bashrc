@@ -27,5 +27,6 @@ source ~/.gitenv
 alias curl='function _curlt() {
   curl -s -w "\n🚀 Time: %{time_total} s\n" "$@" | tee /dev/tty | awk '"'"'/^🚀 Time:/ {printf "⏱️ Total time: %.0f ms\n", $3 * 1000}'"'"'
 }; _curlt'
+alias push="git pull --rebase && git push"
 
 clear
