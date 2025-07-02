@@ -24,4 +24,8 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source ~/.gitenv
 . "$HOME/.cargo/env"
 
+alias curl='function _curlt() {
+  curl -s -w "\n🚀 Time: %{time_total} s\n" "$@" | tee /dev/tty | awk '"'"'/^🚀 Time:/ {printf "⏱️ Total time: %.0f ms\n", $3 * 1000}'"'"'
+}; _curlt'
+
 clear
