@@ -1,10 +1,10 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-add_newline = false 
+add_newline = false
 command_timeout = 1000
 
 format = """
-$directory$git_branch$git_status$python$cmd_duration
+$directory$git_branch$git_status[$hostname]($style)
 $character
 """
 
@@ -49,3 +49,8 @@ vimcmd_symbol = "[❮](blue)"
 
 [line_break]
 disabled = false
+
+[hostname]
+ssh_only = false
+format = "🌐 [$hostname]($style)"  # Custom icon, no " in"
+style = "green"
