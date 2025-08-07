@@ -52,5 +52,5 @@ disabled = false
 
 [hostname]
 ssh_only = false
-format = "🌐 [$hostname]($style)"  # Custom icon, no " in"
+format = "[$hostname]($style)"  # Custom icon, no " in"
 style = "green"
