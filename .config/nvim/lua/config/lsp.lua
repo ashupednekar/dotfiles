@@ -10,7 +10,7 @@ lsp.setup()
 require('nvim-autopairs').setup{}
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = {"go", "gopls", "rust_analyzer", "pyright", "ast-grep", "zls"},
+  ensure_installed = {"gopls", "rust_analyzer", "zls"},
   handlers = {
     function(server_name)
       require('lspconfig')[server_name].setup({})
