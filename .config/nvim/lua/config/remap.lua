@@ -27,6 +27,8 @@ vim.keymap.set('v', '<down>', '<nop>', opts)
 local telescope = require('telescope.builtin')
 vim.keymap.set('n', '<leader><leader>', telescope.find_files, {})
 vim.keymap.set('n', '<leader>/', telescope.live_grep, {})
+vim.keymap.set('n', '<leader>ff', telescope.find_files, {})
+vim.keymap.set('n', '<leader>fg', telescope.live_grep, {})
 vim.keymap.set('n', '<leader>fb', telescope.buffers, {})
 vim.keymap.set('n', '<leader>fh', telescope.help_tags, {})
 
@@ -57,3 +59,7 @@ vim.keymap.set({'n', 'v'}, 'y', '"+y')
 vim.keymap.set('n', 'y', '"+y')
 vim.keymap.set({'n', 'v'}, 'p', '"+p')
 vim.keymap.set({'n', 'v'}, 'P', '"+P')
+
+-- reduced timeouts
+vim.opt.timeoutlen = 300 
+vim.opt.ttimeoutlen = 10
