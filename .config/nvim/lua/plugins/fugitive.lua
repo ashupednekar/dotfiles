@@ -81,7 +81,24 @@ return {
         })
       end,
       desc = "Git pull --rebase && push (async with loader)",
+    },
+    {
+      "<leader>gg",
+      function()
+        local notify = require("notify")
+        -- Stage all changes
+        vim.fn.system("git add .")
+        -- Check if staging was successful
+        if vim.v.shell_error == 0 then
+          -- Open commit message pop-up
+          vim.cmd("Git commit")
+          notify("Staged all changes, opened commit message pop-up", "info", { timeout = 2000 })
+        else
+          notify("❌ Failed to stage changes", "error", { timeout = 4000 })
+        end
+      end,
+      desc = "Git add all and commit with message pop-up",
     }
-  }
+  },
 }
 
