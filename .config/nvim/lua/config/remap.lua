@@ -61,5 +61,5 @@ vim.keymap.set({'n', 'v'}, 'p', '"+p')
 vim.keymap.set({'n', 'v'}, 'P', '"+P')
 
 -- reduced timeouts
-vim.opt.timeoutlen = 300 
+vim.opt.timeoutlen = 500
 vim.opt.ttimeoutlen = 10
