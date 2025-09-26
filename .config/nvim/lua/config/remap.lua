@@ -1,5 +1,6 @@
 -- disable mouse
 vim.o.mouse = ""
+vim.keymap.set({"n", "i", "v", "c"}, "<F1>", "<Nop>", { noremap = true, silent = true })
 
 -- escape remap to `
 vim.keymap.set("n", "<Tab>", "<Esc>", { noremap = true })
