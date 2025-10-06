@@ -12,14 +12,10 @@ eval "$(zoxide init bash)"
 alias cd=z
 alias vi=nvim
 alias k=kubectl
-alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
 export _ZO_DOCTOR=0
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-source ~/.gitenv
 . "$HOME/.cargo/env"
 
-clear

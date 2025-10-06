@@ -61,5 +61,3 @@ cmd - tab : yabai -m space --focus recent
 # === Standard Text Editing Shortcuts ===
 ctrl - f : osascript -e 'tell application "System Events" to keystroke "f" using {command down}'
 ctrl - a : osascript -e 'tell application "System Events" to keystroke "a" using {command down}'
-ctrl - c : osascript -e 'tell application "System Events" to keystroke "c" using {command down}'
-ctrl - v : osascript -e 'tell application "System Events" to keystroke "v" using {command down}'
