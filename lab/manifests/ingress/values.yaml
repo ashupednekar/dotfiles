@@ -1,0 +1,33 @@
+controller:
+  service:
+    type: NodePort
+    nodePorts:
+      http: 30080
+      https: 30443
+    annotations: []
+  ingressClassResource:
+    name: nginx
+    enabled: true
+    default: true
+  ingressClass: nginx
+  metrics:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+  config:
+    server-name-hash-bucket-size: "128"
+    use-forwarded-headers: "true"
+    proxy-buffer-size: "16k"
+    ssl-redirect: "false"
+    annotations-risk-level: Critical
+    enable-real-ip: "true"
+    global-allowed-response-headers: Bb-Approved
+    limit-req-status-code: "429"
+    loglevel: debug
+    use-forwarded-headers: "true"
+    #use-proxy-protocol: "true"
+    #error-log-level: "debug"
+  hostPort:
+    enabled: false
+  allowSnippetAnnotations: true  
+  enableAnnotationValidations: false 
