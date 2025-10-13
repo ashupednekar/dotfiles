@@ -1,0 +1,11 @@
+global:
+  security:
+    allowInsecureImages: true
+auth:
+  rootUser: minioadmin 
+  rootPassword: minioadmin 
+image:
+  repository: bitnamilegacy/minio
+console:
+  image:
+    repository: bitnamilegacy/minio-object-browser

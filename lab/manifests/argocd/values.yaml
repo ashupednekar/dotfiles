@@ -1,0 +1,49 @@
+server:
+  replicas: 2
+crds:
+  install: true
+configs:
+  styles: |
+      .sidebar__logo {
+        background: url(https://i.ibb.co/whMjZDrw/ashucd.png) no-repeat center;
+        background-size: contain;
+        width: 120px !important;
+        height: 120px !important;
+        margin-left: -30px !important;
+      }
+      
+      .sidebar__logo img {
+        display: none;
+      }
+      
+      /* Hide version text in both collapsed and expanded modes */
+      .sidebar__logo__text,
+      .sidebar__version,
+      .sidebar__logo .sidebar__version,
+      .sidebar div[class*="version"] {
+        display: none !important;
+      }
+      
+      .sidebar--expanded .sidebar__logo__text,
+      .sidebar--expanded .sidebar__version,
+      .sidebar--expanded .sidebar__logo .sidebar__version,
+      .sidebar--expanded div[class*="version"] {
+        display: none !important;
+      }
+  params:
+    create: true
+    server.insecure: "true"
+    server.rootpath: '/argo'
+server:
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: lab.ashudev.in
+    tls: true
+    path: /argo
+    pathType: Prefix
+    annotations:
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+
+
