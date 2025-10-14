@@ -33,6 +33,7 @@ brew install helm
 brew install kubectl
 brew install tmux
 curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh#$(date +%s)" | bash
+echo 'set-option -g status-position top' >> ~/.tmux.conf
 
 #Sketchybar
 osascript -e 'tell application "System Events" to set autohide menu bar of dock preferences to true'
