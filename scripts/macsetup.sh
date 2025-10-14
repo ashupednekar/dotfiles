@@ -31,6 +31,8 @@ brew install sketchybar
 curl -L https://github.com/kvndrsslr/sketchybar-app-font/releases/download/v2.0.28/sketchybar-app-font.ttf -o $HOME/Library/Fonts/sketchybar-app-font.ttf
 brew install helm
 brew install kubectl
+brew install tmux
+curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh#$(date +%s)" | bash
 
 #Sketchybar
 osascript -e 'tell application "System Events" to set autohide menu bar of dock preferences to true'
