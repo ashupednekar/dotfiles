@@ -12,6 +12,8 @@ eval "$(zoxide init bash)"
 alias cd=z
 alias vi=nvim
 alias k=kubectl
+alias docker=podman
+
 export _ZO_DOCTOR=0
 
 eval "$(starship init zsh)"
