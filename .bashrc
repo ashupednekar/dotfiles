@@ -1,6 +1,4 @@
 feh --bg-fill ~/wallpapers/goodwallpaper.png
-export KUBE_EDITOR=nvim
-
 export PATH="/home/ashu/.cargo/bin:$PATH"
 export PATH="/snap/bin/go:$PATH"
 export PATH="$HOME/go/bin/:$PATH"
@@ -11,11 +9,17 @@ export NVM_DIR="$HOME/.nvm"
 eval "$(zoxide init bash)"
 
 alias cd=z
-alias vi=nvim
+alias vi='f() {
+    if [ $# -eq 0 ]; then
+        nvim --server "$NVIM" --remote-send "<C-\\><C-n>:Oil $(pwd)<CR>"
+    else
+        nvim --server "$NVIM" --remote "$@"
+    fi
+}; f'
 alias k=kubectl
 alias nats='nats -s localhost:30042'
-alias psql="docker exec -it postgres psql -U consoleuser -d console"
 alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
+export KUBE_EDITOR=nvim
 export _ZO_DOCTOR=0
 
 eval "$(starship init bash)"
