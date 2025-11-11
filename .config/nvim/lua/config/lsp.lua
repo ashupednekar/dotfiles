@@ -7,9 +7,6 @@ local lsp = require('lsp-zero').preset({})
 lsp.on_attach(function(client, bufnr)
   local opts = { buffer = bufnr, remap = false, silent = true }
 
-  -- See :help lsp-zero-keybindings
-  -- To see all the keybindings that are created, uncomment the line below.
-  -- print(vim.inspect(lsp.get_keymaps()))
   lsp.default_keymaps({ buffer = bufnr })
   vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
@@ -18,7 +15,6 @@ lsp.on_attach(function(client, bufnr)
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
 
-  -- Format on save
   if client.supports_method("textDocument/formatting") then
     vim.api.nvim_create_autocmd("BufWritePre", {
       group = vim.api.nvim_create_augroup("LspFormatOnSave", { clear = true }),
@@ -62,6 +58,7 @@ require('mason-lspconfig').setup({
           ["rust-analyzer"] = {
             cargo = {
               allFeatures = true,
+              features = "all",
             },
             checkOnSave = {
               command = "clippy",
@@ -69,7 +66,13 @@ require('mason-lspconfig').setup({
             build = {
               allFeatures = true,
             },
-            -- Add this to use leptosfmt
+            procMacro = {
+              ignored = {
+                leptos_macro = {
+                  "server",
+                }
+              }
+            },
             ["rustfmt"] = {
               extraArgs = {"+nightly", "leptosfmt"},
             }
@@ -93,9 +96,42 @@ require('mason-lspconfig').setup({
         }
     end,
     tailwindcss = function()
-        require('lspconfig').tailwindcss.setup({
-            on_attach = lsp.on_attach,
-        })
+      require('lspconfig').tailwindcss.setup({
+        on_attach = lsp.on_attach,
+        filetypes = {
+          "html",
+          "css",
+          "javascript",
+          "javascriptreact",
+          "typescriptreact",
+          "rust",
+          "templ",  -- add this for Leptos templating
+        },
+        init_options = {
+          userLanguages = {
+            rust = "html",
+            templ = "html",
+          },
+        },
+      })
+    end,
+    emmet_ls = function()
+      require('lspconfig').emmet_ls.setup({
+        on_attach = lsp.on_attach,
+        filetypes = {
+          "html",
+          "css",
+          "templ",
+          "rust",
+        },
+        init_options = {
+          html = {
+            options = {
+              ["bem.enabled"] = true,
+            },
+          },
+        },
+      })
     end,
   }
 })
@@ -139,3 +175,4 @@ cmp.setup({
     end
   },
 })
+
