@@ -17,7 +17,8 @@ spec:
       values: |
         server:
           replicas: 2
-        DNS: "lws.ashudev.in"   
+        global:
+          DNS: "lws.ashudev.in"   
   #  helm:
   #    valueFiles:
   #    - $values/values.yaml
