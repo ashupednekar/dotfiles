@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: litewebservices-portal
+  name: litefunctions
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,13 +12,7 @@ spec:
   sources:
   - repoURL: ghcr.io/ashupednekar/charts
     targetRevision: x
-    chart: litewebservices-portal
-    helm:
-      values: |
-        server:
-          replicas: 1
-        global:
-          DNS: "lws.ashudev.in"   
+    chart: litefunctions
   #  helm:
   #    valueFiles:
   #    - $values/values.yaml
