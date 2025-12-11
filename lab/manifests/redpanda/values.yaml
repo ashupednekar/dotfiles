@@ -1,0 +1,10 @@
+statefulset:
+  replicas: 1
+  podAntiAffinity:
+    type: custom
+    custom: {}
+  podTemplate:
+    spec:
+      affinity: {}
+      topologySpreadConstraints: []
+
