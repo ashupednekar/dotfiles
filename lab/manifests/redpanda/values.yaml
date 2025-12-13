@@ -1,10 +1,10 @@
+external:
+  domain: redpanda.ashudev.in
+
 statefulset:
-  replicas: 1
   podAntiAffinity:
-    type: custom
-    custom: {}
-  podTemplate:
-    spec:
-      affinity: {}
-      topologySpreadConstraints: []
+    type: soft
+  initContainers:
+    setDataDirOwnership:
+      enabled: true
 

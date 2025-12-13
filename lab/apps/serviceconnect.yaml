@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: servicefunctions
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: apps 
+  sources:
+  - repoURL: ghcr.io/ashupednekar/charts
+    targetRevision: x
+    chart: servicefunctions
+    helm:
+      values: |
+        server:
+          replicas: 1
+        global:
+          DNS: "tools.ashudev.in"   
+  #  helm:
+  #    valueFiles:
+  #    - $values/values.yaml
+  #- repoURL: 'git@github.com:ashupednekar/deploy'
+  #  targetRevision: apps 
+  #  ref: values
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
