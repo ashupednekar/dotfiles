@@ -1,1 +1,47 @@
+# Basic settings
+set $mod Mod4        # Super/Windows key
+set $alt Mod1        # Alt/Option
 
+# Alacritty terminal
+set $term alacritty
+
+### FOCUS (like yabai)
+bindsym $alt+h focus left
+bindsym $alt+j focus down
+bindsym $alt+k focus up
+bindsym $alt+l focus right
+
+### MOVE (like yabai swap)
+bindsym $alt+Shift+h move left
+bindsym $alt+Shift+j move down
+bindsym $alt+Shift+k move up
+bindsym $alt+Shift+l move right
+
+### WORKSPACE SWITCHING
+bindsym $alt+1 workspace 1
+bindsym $alt+2 workspace 2
+bindsym $alt+3 workspace 3
+bindsym $alt+4 workspace 4
+bindsym $alt+5 workspace 5
+bindsym $alt+6 workspace 6
+bindsym $alt+7 workspace 7
+bindsym $alt+8 workspace 8
+bindsym $alt+9 workspace 9
+bindsym $alt+0 workspace 10
+
+### WINDOW ACTIONS
+bindsym $alt+x kill         # close window
+bindsym $alt+f fullscreen   # toggle fullscreen
+bindsym $alt+t floating toggle; move position center
+
+### SPLIT MODE (toggle horizontal/vertical)
+bindsym $alt+e layout toggle split
+
+### GAPS (if desired)
+gaps inner 8
+gaps outer 4
+smart_gaps on
+
+### BORDER BEHAVIOR
+default_border pixel 2
+default_floating_border pixel 2
