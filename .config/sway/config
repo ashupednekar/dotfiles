@@ -1,47 +1,78 @@
-# Basic settings
-set $mod Mod4        # Super/Windows key
-set $alt Mod1        # Alt/Option
-
-# Alacritty terminal
+set $mod Mod4
+set $alt Mod1
 set $term alacritty
+set $menu wofi --show drun
 
-### FOCUS (like yabai)
-bindsym $alt+h focus left
-bindsym $alt+j focus down
-bindsym $alt+k focus up
-bindsym $alt+l focus right
+font pango:monospace 10
+floating_modifier $mod
+focus_follows_mouse yes
 
-### MOVE (like yabai swap)
-bindsym $alt+Shift+h move left
-bindsym $alt+Shift+j move down
-bindsym $alt+Shift+k move up
-bindsym $alt+Shift+l move right
+unbindsym Mod1+h
+unbindsym Mod1+j
+unbindsym Mod1+k
+unbindsym Mod1+l
+unbindsym Mod1+Shift+h
+unbindsym Mod1+Shift+j
+unbindsym Mod1+Shift+k
+unbindsym Mod1+Shift+l
+unbindsym Mod1+1
+unbindsym Mod1+2
+unbindsym Mod1+3
+unbindsym Mod1+4
+unbindsym Mod1+5
+unbindsym Mod1+6
+unbindsym Mod1+7
+unbindsym Mod1+8
+unbindsym Mod1+9
+unbindsym Mod1+0
 
-### WORKSPACE SWITCHING
-bindsym $alt+1 workspace 1
-bindsym $alt+2 workspace 2
-bindsym $alt+3 workspace 3
-bindsym $alt+4 workspace 4
-bindsym $alt+5 workspace 5
-bindsym $alt+6 workspace 6
-bindsym $alt+7 workspace 7
-bindsym $alt+8 workspace 8
-bindsym $alt+9 workspace 9
-bindsym $alt+0 workspace 10
+bindsym $mod+Return exec $term
+bindsym $mod+d exec $menu
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exit
 
-### WINDOW ACTIONS
-bindsym $alt+x kill         # close window
-bindsym $alt+f fullscreen   # toggle fullscreen
-bindsym $alt+t floating toggle; move position center
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
 
-### SPLIT MODE (toggle horizontal/vertical)
-bindsym $alt+e layout toggle split
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
 
-### GAPS (if desired)
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+bindsym $mod+f fullscreen toggle
+bindsym $mod+t floating toggle; move position center
+bindsym $mod+e layout toggle split
+
 gaps inner 8
 gaps outer 4
 smart_gaps on
 
-### BORDER BEHAVIOR
 default_border pixel 2
 default_floating_border pixel 2
+
+exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
