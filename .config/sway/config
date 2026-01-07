@@ -1,3 +1,5 @@
+exec_always --no-startup-id waybar
+exec_always --no-startup-id mako
 
 set $term alacritty
 set $menu wofi --show drun
