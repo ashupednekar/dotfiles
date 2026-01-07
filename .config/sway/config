@@ -8,9 +8,13 @@ font pango:monospace 10
 floating_modifier Mod4
 focus_follows_mouse yes
 
+bindsym Mod4+p exec grim -g "$(slurp)" - | wl-copy
+bindsym Mod4+Shift+p exec grim - | wl-copy
+bindsym Mod4+Ctrl+p exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png
+
 bindsym Mod4+Return exec ghostty
 bindsym Mod4+d exec vicinae open
-bindsym Mod4+b exec zen-browser
+bindsym Mod4+b exec env GTK_THEME=Adwaita zen-browser
 bindsym Mod4+Shift+q kill
 bindsym Mod4+Shift+c reload
 bindsym Mod4+Shift+e exit

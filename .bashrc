@@ -9,14 +9,8 @@ export NVM_DIR="$HOME/.nvm"
 eval "$(zoxide init bash)"
 
 alias cd=z
-alias vi='f() {
-    if [ $# -eq 0 ]; then
-        nvim --server "$NVIM" --remote-send "<C-\\><C-n>:Oil $(pwd)<CR>"
-    else
-        nvim --server "$NVIM" --remote "$@"
-    fi
-}; f'
 alias k=kubectl
+alias vi=nvim
 alias nats='nats -s localhost:30042'
 alias random="echo $(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | head -c 10)"
 export KUBE_EDITOR=nvim
