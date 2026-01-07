@@ -1,30 +1,10 @@
 set $mod Mod4
-set $alt Mod1
 set $term alacritty
 set $menu wofi --show drun
 
 font pango:monospace 10
 floating_modifier $mod
 focus_follows_mouse yes
-
-unbindsym Mod1+h
-unbindsym Mod1+j
-unbindsym Mod1+k
-unbindsym Mod1+l
-unbindsym Mod1+Shift+h
-unbindsym Mod1+Shift+j
-unbindsym Mod1+Shift+k
-unbindsym Mod1+Shift+l
-unbindsym Mod1+1
-unbindsym Mod1+2
-unbindsym Mod1+3
-unbindsym Mod1+4
-unbindsym Mod1+5
-unbindsym Mod1+6
-unbindsym Mod1+7
-unbindsym Mod1+8
-unbindsym Mod1+9
-unbindsym Mod1+0
 
 bindsym $mod+Return exec $term
 bindsym $mod+d exec $menu
