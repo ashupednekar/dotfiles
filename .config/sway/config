@@ -1,15 +1,14 @@
 exec_always --no-startup-id waybar
 exec_always --no-startup-id mako
-
-set $term alacritty
-set $menu wofi --show drun
+exec_always --no-startup-id vicinae server
 
 font pango:monospace 10
 floating_modifier Mod4
 focus_follows_mouse yes
 
-bindsym Mod4+Return exec $term
-bindsym Mod4+d exec $menu
+bindsym Mod4+Return exec ghostty
+bindsym Mod4+d exec vicinae open
+bindsym Mod4+b exec zen-browser
 bindsym Mod4+Shift+q kill
 bindsym Mod4+Shift+c reload
 bindsym Mod4+Shift+e exit
