@@ -1,6 +1,8 @@
-exec_always --no-startup-id waybar
-exec_always --no-startup-id mako
-exec_always --no-startup-id vicinae server
+exec_always waybar
+exec_always mako
+exec_always vicinae server
+exec_always gnome-keyring-daemon --start --components=secrets
+exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
 
 font pango:monospace 10
 floating_modifier Mod4
@@ -22,6 +24,11 @@ bindsym Mod4+Shift+h move left
 bindsym Mod4+Shift+j move down
 bindsym Mod4+Shift+k move up
 bindsym Mod4+Shift+l move right
+
+bindsym Mod4+Mod1+h resize shrink width 5 ppt
+bindsym Mod4+Mod1+l resize grow width 5 ppt
+bindsym Mod4+Mod1+j resize grow height 5 ppt
+bindsym Mod4+Mod1+k resize shrink height 5 ppt
 
 bindsym Mod4+1 workspace 1
 bindsym Mod4+2 workspace 2
@@ -56,4 +63,16 @@ smart_gaps on
 default_border pixel 2
 default_floating_border pixel 2
 
-exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+corner_radius 6
+
+blur enable
+blur_radius 8
+blur_passes 2
+blur_noise 0.02
+
+layer_effects "waybar" blur enable
+layer_effects "waybar" blur_ignore_transparent enable
+
+for_window [app_id="ghostty"] opacity 0.90
+for_window [app_id="zen-browser"] opacity 0.95
+for_window [floating] opacity 0.96
