@@ -3,6 +3,11 @@ exec_always mako
 exec_always vicinae server
 exec_always gnome-keyring-daemon --start --components=secrets
 exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec_always swayidle -w \
+  timeout 300 '~/.config/sway/lock.sh' \
+  timeout 600 'swaymsg "output * power off"' \
+  resume 'swaymsg "output * power on"' \
+  before-sleep '~/.config/sway/lock.sh'
 
 font pango:monospace 10
 floating_modifier Mod4
