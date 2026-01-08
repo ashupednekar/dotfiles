@@ -1,0 +1,9 @@
+font=monospace
+indicator-radius=90
+indicator-thickness=6
+
+inside-color=000000cc
+ring-color=ffffff55
+key-hl-color=ffffff
+separator-color=00000000
+text-color=ffffff

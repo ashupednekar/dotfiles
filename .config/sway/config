@@ -8,16 +8,14 @@ font pango:monospace 10
 floating_modifier Mod4
 focus_follows_mouse yes
 
+bindsym Mod4+l exec waylock
 bindsym Mod4+p exec grim -g "$(slurp)" - | wl-copy
 bindsym Mod4+Shift+p exec grim - | wl-copy
 bindsym Mod4+Ctrl+p exec grim -g "$(slurp)" ~/Pictures/screenshot-$(date +'%Y-%m-%d_%H-%M-%S').png
 
 bindsym Mod4+Return exec ghostty
 bindsym Mod4+d exec vicinae open
-bindsym Mod4+b exec env GTK_THEME=Adwaita zen-browser
-bindsym Mod4+Shift+q kill
-bindsym Mod4+Shift+c reload
-bindsym Mod4+Shift+e exit
+bindsym Mod4+b exec env GTK_THEME=Adwaita-dark zen-browser
 
 bindsym Mod4+h focus left
 bindsym Mod4+j focus down
@@ -80,3 +78,5 @@ layer_effects "waybar" blur_ignore_transparent enable
 for_window [app_id="ghostty"] opacity 0.90
 for_window [app_id="zen-browser"] opacity 0.95
 for_window [floating] opacity 0.96
+
+output * bg ~/Pictures/wallpaper.png fill
