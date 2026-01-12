@@ -1,6 +1,6 @@
 [user]
-  name = ashupednekar
-  email = ashutoshpednekar15@gmail.com
+	name = Ashu Pednekar
+	email = ashupednekar49@gmail.com
   signingkey = ~/.ssh/ashupednekar
 
 [commit]
@@ -11,3 +11,5 @@
 
 [includeIf "gitdir:~/work/"]
   path = ~/.gitconfig-work
+[credential]
+	helper = store
