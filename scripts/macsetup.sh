@@ -1,14 +1,27 @@
+cp ../.zshrc ~
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+curl -sS https://starship.rs/install.sh | sh
+curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 source ~/.zshrc
+
+WALLPAPER_URL="https://wallpapercave.com/download/4k-studio-ghibli-wallpapers-wp12510494"
+curl -L "$WALLPAPER_URL" -o "$HOME/wallpaper.png" && osascript -e 'tell application "System Events" to set picture of every desktop to POSIX file "'"$HOME"'/wallpaper.png"'
+
 #main stuff
+brew install wget
 brew install zen-browser
 brew install nvim
 brew install --cask ghostty
 brew install koekeishiya/formulae/yabai
 brew install koekeishiya/formulae/skhd
 
+#opencode
+curl -fsSL https://opencode.ai/install | bash
+
+cp -r ../.config/mac/* ~/.config
+
 # Languages 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh 
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sudo sh 
 brew install go
 brew install python@3.11
 brew install lua
@@ -20,8 +33,6 @@ brew install --cask font-sf-pro
 brew install --cask font-jetbrains-mono
 
 # Misc 
-cargo install starship
-cargo install zoxide
 go install github.com/jesseduffield/lazygit@latest
 brew install --cask microsoft-teams
 brew install --cask rancher
