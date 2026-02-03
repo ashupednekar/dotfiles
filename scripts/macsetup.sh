@@ -96,7 +96,7 @@ run_step "install_lazygit" go install github.com/jesseduffield/lazygit@latest ||
 
 # Casks (separate)
 run_step "install_ghostty" brew install --cask ghostty
-run_step "install_colima" brew install colima
+run_step "install_colima" brew install docker colima
 
 # -------------------------------
 # OpenCode
