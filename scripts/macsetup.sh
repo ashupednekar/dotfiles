@@ -1,5 +1,5 @@
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
+source ~/.zshrc
 #main stuff
 brew install zen-browser
 brew install nvim
