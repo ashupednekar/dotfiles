@@ -114,7 +114,8 @@ cp -r ../.config/mac/* ~/.config
 # -------------------------------
 # Languages
 # -------------------------------
-run_step "install_rust" bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+run_step "install_rust" sudo bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+source "$HOME/.cargo/env"     
 run_step "install_go" brew install go
 run_step "install_python" brew install python@3.11
 run_step "install_lua" brew install lua
@@ -122,13 +123,14 @@ run_step "install_lua" brew install lua
 # -------------------------------
 # Fonts (via Homebrew Casks where possible)
 # -------------------------------
-run_step "install_sf_symbols" brew install --cask sf-symbols
-run_step "install_sf_mono" brew install --cask font-sf-mono
-run_step "install_sf_pro" brew install --cask font-sf-pro
-run_step "install_jetbrains_mono" brew install --cask font-jetbrains-mono
-run_step "install_hack_nerd" brew install --cask font-hack-nerd-font
-run_step "install_meslo_nerd" brew install --cask font-meslo-lg-nerd-font
-run_step "install_sketchybar_font" brew install --cask font-sketchybar-app-font
+run_step "install fonts" bash -c '
+brew install --cask sf-symbols
+brew install --cask font-sf-mono
+brew install --cask font-sf-pro
+brew install --cask font-jetbrains-mono
+brew install --cask font-hack-nerd-font
+brew install --cask font-meslo-lg-nerd-font
+'
 
 # -------------------------------
 # Tmux
@@ -165,11 +167,15 @@ osascript -e "tell application \"System Events\" to set autohide menu bar of doc
 # -------------------------------
 # Window management
 # -------------------------------
-run_step "yabai_skhd" bash -c '
+run_step "start window manager" bash -c '
 yabai --start-service
 skhd --start-service
 sudo yabai --load-sa
 sketchybar --reload
+'
+
+run_step "start kubernetes" bash -c '
+colima start --kubernetes --memory 12 --cpu 6
 '
 
 log "Setup complete. Re-run script to resume any failed steps."
