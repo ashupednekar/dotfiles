@@ -91,6 +91,16 @@ run_step "install_zen_browser" brew install zen-browser
 run_step "install_yabai" brew install koekeishiya/formulae/yabai
 run_step "install_skhd" brew install koekeishiya/formulae/skhd
 
+
+# -------------------------------
+# Languages
+# -------------------------------
+run_step "install_rust" sudo bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+source "$HOME/.cargo/env"     
+run_step "install_go" brew install go
+run_step "install_python" brew install python@3.11
+run_step "install_lua" brew install lua
+
 # Lazygit via go install
 run_step "install_lazygit" go install github.com/jesseduffield/lazygit@latest || true
 
@@ -109,16 +119,10 @@ run_step "install_opencode" bash -c 'curl -fsSL https://opencode.ai/install | ba
 run_step "copy_config" bash -c '
 mkdir -p ~/.config
 cp -r ../.config/mac/* ~/.config
+cp -r ../.config/ghostty ~/.config
+cp -r ../.config/nvim ~/.config
+cp -r ../.config/starship.toml ~/.config
 '
-
-# -------------------------------
-# Languages
-# -------------------------------
-run_step "install_rust" sudo bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
-source "$HOME/.cargo/env"     
-run_step "install_go" brew install go
-run_step "install_python" brew install python@3.11
-run_step "install_lua" brew install lua
 
 # -------------------------------
 # Fonts (via Homebrew Casks where possible)

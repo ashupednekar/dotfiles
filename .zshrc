@@ -1,6 +1,8 @@
 export KUBE_EDITOR=nvim
 
-export PATH="/home/ashu/.cargo/bin:$PATH"
+
+export PATH="/Users/$USER/.local/bin:$PATH"
+export PATH="/home/$USER/.cargo/bin:$PATH"
 export PATH="/snap/bin/go:$PATH"
 export PATH="$HOME/go/bin/:$PATH"
 export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
