@@ -79,6 +79,8 @@ fi
 # Brew packages (each separately)
 # -------------------------------
 run_step "install_wget" brew install wget
+run_step "install_wget" brew install ripgrep
+run_step "install_wget" brew install podman 
 run_step "install_nvim" brew install nvim
 run_step "install_jq" brew install jq
 run_step "install_gh" brew install gh
