@@ -1,5 +1,4 @@
 theme = Tomorrow Night Bright
 background-opacity = 0.9
 macos-titlebar-style = hidden
-font-size = 10
-command = nvim +terminal +"startinsert"
+font-size = 14
