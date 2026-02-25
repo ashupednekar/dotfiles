@@ -1,6 +1,5 @@
 export KUBE_EDITOR=nvim
 
-
 export PATH="/Users/$USER/.local/bin:$PATH"
 export PATH="/home/$USER/.cargo/bin:$PATH"
 export PATH="/snap/bin/go:$PATH"
@@ -14,12 +13,14 @@ eval "$(zoxide init bash)"
 alias cd=z
 alias vi=nvim
 alias k=kubectl
-alias docker=podman
 
 export _ZO_DOCTOR=0
+export _ZO_EXCLUDE_DIRS="$HOME/worktrees/*"
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
 . "$HOME/.cargo/env"
 
+export PATH=/Users/ashu/.opencode/bin:$PATH
+export PATH="/Users/ashu/.antigravity/antigravity/bin:$PATH"
