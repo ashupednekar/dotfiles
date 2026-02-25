@@ -2,4 +2,4 @@ theme = Tomorrow Night Bright
 background-opacity = 0.9
 macos-titlebar-style = hidden
 font-size = 14
-command = zsh $(tmux a || tmux)
+command = tmux new -As main
