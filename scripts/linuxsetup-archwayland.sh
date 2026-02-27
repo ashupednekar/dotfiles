@@ -39,12 +39,26 @@ makepkg -si --noconfirm
 '
 
 # -----------------------------------------------------------------------------
+# Shell tooling
+# -----------------------------------------------------------------------------
+
+run_step "install_starship" bash -c '
+command -v starship >/dev/null 2>&1 && exit 0
+curl -fsSL https://starship.rs/install.sh | sh -s -- --yes
+'
+
+run_step "install_zoxide" bash -c '
+command -v zoxide >/dev/null 2>&1 && exit 0
+curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+'
+
+# -----------------------------------------------------------------------------
 # Wayland Base (NO swaylock here)
 # -----------------------------------------------------------------------------
 
 run_step "wayland_base" yay -S --needed --noconfirm \
   sway swayidle waybar mako \
-  wl-clipboard grim slurp \
+  wl-clipboard xclip grim slurp \
   sway-contrib \
   xdg-user-dirs \
   xdg-desktop-portal xdg-desktop-portal-wlr \
@@ -58,6 +72,7 @@ run_step "wayland_base" yay -S --needed --noconfirm \
 
 run_step "fonts" yay -S --needed --noconfirm \
   ttf-jetbrains-mono \
+  ttf-jetbrains-mono-nerd \
   noto-fonts noto-fonts-emoji noto-fonts-cjk
 
 # -----------------------------------------------------------------------------
@@ -78,11 +93,16 @@ run_step "dev_tools" yay -S --needed --noconfirm \
   git github-cli \
   python python-pip \
   go rust \
-  lua \
+  lua lazygit \
   nodejs npm \
   podman buildah skopeo \
   kubectl helm aws-cli \
   openssh rsync
+
+run_step "install_bun" bash -c '
+command -v bun >/dev/null 2>&1 && exit 0
+curl -fsSL https://bun.sh/install | bash
+'
 
 # -----------------------------------------------------------------------------
 # Enable services
@@ -170,6 +190,26 @@ EOF
 "
 
 run_step "restart_logind" sudo systemctl restart systemd-logind
+
+# -----------------------------------------------------------------------------
+# Copy config files
+# -----------------------------------------------------------------------------
+
+run_step "copy_config" bash -c '
+mkdir -p ~/.config
+cp -r $DOTFILES_DIR/.config/sway ~/.config
+cp -r $DOTFILES_DIR/.config/waybar ~/.config
+cp -r $DOTFILES_DIR/.config/mako ~/.config
+cp -r $DOTFILES_DIR/.config/nvim ~/.config
+'
+
+# -----------------------------------------------------------------------------
+# Wallpaper
+# -----------------------------------------------------------------------------
+
+run_step "set_wallpaper" bash -c '
+cp $DOTFILES_DIR/wallpaper.png ~/wallpaper.png
+'
 
 # -----------------------------------------------------------------------------
 # Done

@@ -32,8 +32,8 @@ bindsym Mod4+Shift+j move down
 bindsym Mod4+Shift+k move up
 bindsym Mod4+Shift+l move right
 
-bindsym Mod4+Mod1+h resize shrink width 5 ppt
-bindsym Mod4+Mod1+l resize grow width 5 ppt
+bindsym Mod4+Mod1+h resize grow width 5 ppt
+bindsym Mod4+Mod1+l resize shrink width 5 ppt
 bindsym Mod4+Mod1+j resize grow height 5 ppt
 bindsym Mod4+Mod1+k resize shrink height 5 ppt
 
@@ -60,6 +60,8 @@ bindsym Mod4+Shift+9 move container to workspace 9
 bindsym Mod4+Shift+0 move container to workspace 10
 
 bindsym Mod4+q kill
+bindsym Mod4+c exec wl-copy -selection clipboard
+bindsym Mod4+v exec wl-paste -selection clipboard
 bindsym Mod4+f fullscreen toggle
 bindsym Mod4+t floating toggle; move position center
 bindsym Mod4+e layout toggle split
@@ -71,18 +73,8 @@ smart_gaps off
 default_border pixel 2
 default_floating_border pixel 2
 
-corner_radius 6
-
-blur enable
-blur_radius 8
-blur_passes 2
-blur_noise 0.02
-
-layer_effects "waybar" blur enable
-layer_effects "waybar" blur_ignore_transparent enable
-
 for_window [app_id="ghostty"] opacity 0.90
 for_window [app_id="zen-browser"] opacity 0.95
 for_window [floating] opacity 0.96
 
-output * bg ~/Pictures/wallpaper.png fill
+output * bg ~/dotfiles/wallpaper.png fill

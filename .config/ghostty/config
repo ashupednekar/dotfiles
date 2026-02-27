@@ -1,5 +1,5 @@
 theme = Tomorrow Night Bright
 background-opacity = 0.9
 macos-titlebar-style = hidden
-font-size = 14
+font-size = 10
 command = tmux new -As home

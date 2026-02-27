@@ -64,15 +64,11 @@ run_step "install_zoxide" bash -c \
 run_step "source_zshrc" bash -c 'source ~/.zshrc || true'
 
 # -------------------------------
-# Wallpaper (non-fatal)
+# Wallpaper
 # -------------------------------
 run_step "set_wallpaper" bash -c '
-WALLPAPER_URL="https://wallpapercave.com/download/4k-studio-ghibli-wallpapers-wp12510494"
-if curl -L --fail "$WALLPAPER_URL" -o "$HOME/wallpaper.png"; then
-  osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$HOME/wallpaper.png\""
-else
-  echo "Wallpaper not available, continuing without it"
-fi
+cp ../wallpaper.png ~/wallpaper.png
+osascript -e "tell application \"System Events\" to set picture of every desktop to POSIX file \"$HOME/wallpaper.png\""
 '
 
 # -------------------------------
