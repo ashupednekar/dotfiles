@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE="$HOME/.cache/waylandsetup.state"
+STATE_FILE="$HOME/.cache/x11setup.state"
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
 
@@ -25,17 +25,15 @@ HOME_DIR="$HOME"
 DOTFILES_DIR="$HOME_DIR/dotfiles"
 
 # -----------------------------------------------------------------------------
-# Bootstrap yay
+# Bootstrap snap
 # -----------------------------------------------------------------------------
 
-run_step "bootstrap_yay" bash -c '
-command -v yay >/dev/null 2>&1 && exit 0
-sudo pacman -S --needed --noconfirm base-devel git
-cd /tmp
-rm -rf yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si --noconfirm
+run_step "bootstrap_snap" bash -c '
+command -v snap >/dev/null 2>&1 && exit 0
+sudo apt update
+sudo apt install -y snapd
+sudo systemctl enable --now snapd.socket
+sudo snap install core
 '
 
 # -----------------------------------------------------------------------------
@@ -53,55 +51,89 @@ curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 '
 
 # -----------------------------------------------------------------------------
-# Wayland Base (NO swaylock here)
+# X11 Base
 # -----------------------------------------------------------------------------
 
-run_step "wayland_base" yay -S --needed --noconfirm \
-  sway swayidle waybar mako \
-  wl-clipboard xclip grim slurp \
-  sway-contrib \
+run_step "x11_base" sudo apt install -y \
+  i3 \
+  i3status \
+  i3lock \
+  i3lock-fancy \
+  xautolock \
+  xdotool \
+  xclip \
+  xsel \
+  scrot \
   xdg-user-dirs \
-  xdg-desktop-portal xdg-desktop-portal-wlr \
-  polkit polkit-gnome acpid \
-  brightnessctl playerctl jq \
-  networkmanager bluez bluez-utils
+  xdg-desktop-portal \
+  polkit \
+  polkit-gnome \
+  acpid \
+  brightnessctl \
+  playerctl \
+  jq \
+  network-manager \
+  bluez \
+  bluez-tools
 
 # -----------------------------------------------------------------------------
 # Fonts
 # -----------------------------------------------------------------------------
 
-run_step "fonts" yay -S --needed --noconfirm \
-  ttf-jetbrains-mono \
-  ttf-jetbrains-mono-nerd \
-  noto-fonts noto-fonts-emoji noto-fonts-cjk
+run_step "fonts" sudo apt install -y \
+  fonts-jetbrains-mono \
+  fonts-noto \
+  fonts-noto-color-emoji
 
 # -----------------------------------------------------------------------------
-# GUI / AUR
+# GUI / Snap apps
 # -----------------------------------------------------------------------------
 
-run_step "gui_apps" yay -S --needed --noconfirm \
-  swaylock-effects \
-  ghostty \
-  zen-browser-bin
+run_step "gui_apps" bash -c '
+sudo snap install ghostty --edge 2>/dev/null || true
+sudo snap install zen-browser --edge 2>/dev/null || true
+'
 
 # -----------------------------------------------------------------------------
 # Dev tools
 # -----------------------------------------------------------------------------
 
-run_step "dev_tools" yay -S --needed --noconfirm \
-  neovim tmux ripgrep fd wget curl unzip \
-  git github-cli \
-  python python-pip \
-  go rust \
-  lua lazygit opencode \
-  nodejs npm \
-  podman buildah skopeo \
-  kubectl helm aws-cli \
-  openssh rsync
+run_step "dev_tools" sudo apt install -y \
+  neovim \
+  tmux \
+  ripgrep \
+  fd-find \
+  wget \
+  curl \
+  unzip \
+  git \
+  gh \
+  python3 \
+  python3-pip \
+  golang \
+  rustc \
+  cargo \
+  lua5.4 \
+  lazygit \
+  nodejs \
+  npm \
+  podman \
+  buildah \
+  skopeo \
+  kubectl \
+  helm \
+  awscli \
+  openssh \
+  rsync
 
 run_step "install_bun" bash -c '
 command -v bun >/dev/null 2>&1 && exit 0
 curl -fsSL https://bun.sh/install | bash
+'
+
+run_step "install_opencode" bash -c '
+command -v opencode >/dev/null 2>&1 && exit 0
+curl -fsSL https://opencode.ai/install.sh | bash
 '
 
 # -----------------------------------------------------------------------------
@@ -125,71 +157,35 @@ EOF
 "
 
 # -----------------------------------------------------------------------------
-# Auto start sway on login
+# Auto start i3 on login
 # -----------------------------------------------------------------------------
 
 run_step "bash_profile" bash -c "
 cat > '$HOME_DIR/.bash_profile' << 'EOF'
-if [[ -z \"\$WAYLAND_DISPLAY\" && \"\$XDG_VTNR\" == \"1\" ]]; then
-  exec sway
+if [[ -z \"\$DISPLAY\" && \"\$XDG_VTNR\" == \"1\" ]]; then
+  exec i3
 fi
 EOF
 "
 
 # -----------------------------------------------------------------------------
-# swayidle config (clean + safe)
+# xautolock config
 # -----------------------------------------------------------------------------
 
-run_step "swayidle_config" bash -c "
-mkdir -p '$HOME_DIR/.config/sway'
-cat > '$HOME_DIR/.config/sway/idle.conf' << 'EOF'
-exec_always swayidle -w \
-  timeout 300 'swaylock -f' \
-  timeout 600 'systemctl suspend' \
-  before-sleep 'swaylock -f'
+run_step "xautolock_config" bash -c "
+mkdir -p '$HOME_DIR/.config/i3'
+cat > '$HOME_DIR/.config/i3/autolock.sh' << 'EOF'
+#!/bin/bash
+xautolock -time 5 -locker 'i3lock-fancy -f' -nowlkp && systemctl suspend
 EOF
+chmod +x '$HOME_DIR/.config/i3/autolock.sh'
 "
 
-run_step "include_idle_in_sway" bash -c "
-cfg='$HOME_DIR/.config/sway/config'
-grep -q 'include ~/.config/sway/idle.conf' \"\$cfg\" 2>/dev/null || \
-echo 'include ~/.config/sway/idle.conf' >> \"\$cfg\"
+run_step "include_autolock_in_i3" bash -c "
+cfg='$HOME_DIR/.config/i3/config'
+grep -q 'exec --no-startup-id xautolock' \"\$cfg\" 2>/dev/null || \
+echo 'exec --no-startup-id xautolock -time 5 -locker "i3lock-fancy -f"' >> \"\$cfg\"
 "
-
-# -----------------------------------------------------------------------------
-# Pretty swaylock config
-# -----------------------------------------------------------------------------
-
-run_step "lockscreen_config" bash -c "
-mkdir -p '$HOME_DIR/.config/swaylock'
-cat > '$HOME_DIR/.config/swaylock/config' << 'EOF'
-clock
-timestr=%H:%M
-datestr=%A, %d %B
-font=JetBrains Mono
-indicator
-indicator-radius=120
-indicator-thickness=10
-effect-blur=10x10
-fade-in=0.2
-EOF
-"
-
-# -----------------------------------------------------------------------------
-# Lid suspend
-# -----------------------------------------------------------------------------
-
-run_step "lid_suspend" sudo bash -c "
-mkdir -p /etc/systemd/logind.conf.d
-cat > /etc/systemd/logind.conf.d/lid.conf << 'EOF'
-[Login]
-HandleLidSwitch=suspend
-HandleLidSwitchExternalPower=suspend
-HandleLidSwitchDocked=suspend
-EOF
-"
-
-run_step "restart_logind" sudo systemctl restart systemd-logind
 
 # -----------------------------------------------------------------------------
 # Copy config files
@@ -197,9 +193,7 @@ run_step "restart_logind" sudo systemctl restart systemd-logind
 
 run_step "copy_config" bash -c '
 mkdir -p ~/.config
-cp -r $DOTFILES_DIR/.config/sway ~/.config
-cp -r $DOTFILES_DIR/.config/waybar ~/.config
-cp -r $DOTFILES_DIR/.config/mako ~/.config
+cp -r $DOTFILES_DIR/.config/i3 ~/.config
 cp -r $DOTFILES_DIR/.config/nvim ~/.config
 '
 
@@ -220,6 +214,5 @@ echo "✔ Setup complete."
 echo "Reboot now."
 echo "System will:"
 echo "→ Autologin"
-echo "→ Start sway"
+echo "→ Start i3"
 echo "→ Auto lock after 5 min"
-echo "→ Suspend after 10 min"

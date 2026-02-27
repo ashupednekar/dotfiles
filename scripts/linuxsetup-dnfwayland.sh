@@ -25,20 +25,6 @@ HOME_DIR="$HOME"
 DOTFILES_DIR="$HOME_DIR/dotfiles"
 
 # -----------------------------------------------------------------------------
-# Bootstrap yay
-# -----------------------------------------------------------------------------
-
-run_step "bootstrap_yay" bash -c '
-command -v yay >/dev/null 2>&1 && exit 0
-sudo pacman -S --needed --noconfirm base-devel git
-cd /tmp
-rm -rf yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si --noconfirm
-'
-
-# -----------------------------------------------------------------------------
 # Shell tooling
 # -----------------------------------------------------------------------------
 
@@ -56,52 +42,89 @@ curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 # Wayland Base (NO swaylock here)
 # -----------------------------------------------------------------------------
 
-run_step "wayland_base" yay -S --needed --noconfirm \
-  sway swayidle waybar mako \
-  wl-clipboard xclip grim slurp \
-  sway-contrib \
+run_step "wayland_base" sudo dnf install -y \
+  sway \
+  swayidle \
+  waybar \
+  mako \
+  wl-clipboard \
+  xclip \
+  grim \
+  slurp \
   xdg-user-dirs \
-  xdg-desktop-portal xdg-desktop-portal-wlr \
-  polkit polkit-gnome acpid \
-  brightnessctl playerctl jq \
-  networkmanager bluez bluez-utils
+  xdg-desktop-portal \
+  xdg-desktop-portal-wlr \
+  polkit \
+  polkit-gnome \
+  acpid \
+  brightnessctl \
+  playerctl \
+  jq \
+  NetworkManager \
+  bluez
 
 # -----------------------------------------------------------------------------
 # Fonts
 # -----------------------------------------------------------------------------
 
-run_step "fonts" yay -S --needed --noconfirm \
-  ttf-jetbrains-mono \
-  ttf-jetbrains-mono-nerd \
-  noto-fonts noto-fonts-emoji noto-fonts-cjk
+run_step "fonts" sudo dnf install -y \
+  jetbrains-mono-fonts \
+  google-noto-sans-fonts \
+  google-noto-emoji-color-fonts
 
 # -----------------------------------------------------------------------------
-# GUI / AUR
+# GUI / Flathub apps
 # -----------------------------------------------------------------------------
 
-run_step "gui_apps" yay -S --needed --noconfirm \
-  swaylock-effects \
-  ghostty \
-  zen-browser-bin
+run_step "enable_flathub" bash -c '
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+'
+
+run_step "gui_apps" bash -c '
+flatpak install -y flathub com.github/Horus645.swaylock-effects 2>/dev/null || true
+flatpak install -y flathub com.mitchellh.ghostty 2>/dev/null || true
+flatpak install -y flathub com.zen_browser.zen 2>/dev/null || true
+'
 
 # -----------------------------------------------------------------------------
 # Dev tools
 # -----------------------------------------------------------------------------
 
-run_step "dev_tools" yay -S --needed --noconfirm \
-  neovim tmux ripgrep fd wget curl unzip \
-  git github-cli \
-  python python-pip \
-  go rust \
-  lua lazygit opencode \
-  nodejs npm \
-  podman buildah skopeo \
-  kubectl helm aws-cli \
-  openssh rsync
+run_step "dev_tools" sudo dnf install -y \
+  neovim \
+  tmux \
+  ripgrep \
+  fd-find \
+  wget \
+  curl \
+  unzip \
+  git \
+  gh \
+  python3 \
+  python3-pip \
+  golang \
+  rust \
+  lua \
+  lazygit \
+  nodejs \
+  npm \
+  podman \
+  buildah \
+  skopeo \
+  kubectl \
+  helm \
+  awscli \
+  openssh \
+  rsync
 
 run_step "install_bun" bash -c '
 command -v bun >/dev/null 2>&1 && exit 0
 curl -fsSL https://bun.sh/install | bash
+'
+
+run_step "install_opencode" bash -c '
+command -v opencode >/dev/null 2>&1 && exit 0
+curl -fsSL https://opencode.ai/install.sh | bash
 '
 
 # -----------------------------------------------------------------------------

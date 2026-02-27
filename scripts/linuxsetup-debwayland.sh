@@ -25,17 +25,15 @@ HOME_DIR="$HOME"
 DOTFILES_DIR="$HOME_DIR/dotfiles"
 
 # -----------------------------------------------------------------------------
-# Bootstrap yay
+# Bootstrap snap
 # -----------------------------------------------------------------------------
 
-run_step "bootstrap_yay" bash -c '
-command -v yay >/dev/null 2>&1 && exit 0
-sudo pacman -S --needed --noconfirm base-devel git
-cd /tmp
-rm -rf yay
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si --noconfirm
+run_step "bootstrap_snap" bash -c '
+command -v snap >/dev/null 2>&1 && exit 0
+sudo apt update
+sudo apt install -y snapd
+sudo systemctl enable --now snapd.socket
+sudo snap install core
 '
 
 # -----------------------------------------------------------------------------
@@ -56,52 +54,87 @@ curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 # Wayland Base (NO swaylock here)
 # -----------------------------------------------------------------------------
 
-run_step "wayland_base" yay -S --needed --noconfirm \
-  sway swayidle waybar mako \
-  wl-clipboard xclip grim slurp \
-  sway-contrib \
+run_step "wayland_base" sudo apt install -y \
+  sway \
+  swayidle \
+  waybar \
+  mako \
+  wl-clipboard \
+  xclip \
+  grim \
+  slurp \
   xdg-user-dirs \
-  xdg-desktop-portal xdg-desktop-portal-wlr \
-  polkit polkit-gnome acpid \
-  brightnessctl playerctl jq \
-  networkmanager bluez bluez-utils
+  xdg-desktop-portal \
+  xdg-desktop-portal-wlr \
+  polkit \
+  polkit-gnome \
+  acpid \
+  brightnessctl \
+  playerctl \
+  jq \
+  network-manager \
+  bluez \
+  bluez-tools
 
 # -----------------------------------------------------------------------------
 # Fonts
 # -----------------------------------------------------------------------------
 
-run_step "fonts" yay -S --needed --noconfirm \
-  ttf-jetbrains-mono \
-  ttf-jetbrains-mono-nerd \
-  noto-fonts noto-fonts-emoji noto-fonts-cjk
+run_step "fonts" sudo apt install -y \
+  fonts-jetbrains-mono \
+  fonts-noto \
+  fonts-noto-color-emoji
 
 # -----------------------------------------------------------------------------
-# GUI / AUR
+# GUI / Snap apps
 # -----------------------------------------------------------------------------
 
-run_step "gui_apps" yay -S --needed --noconfirm \
-  swaylock-effects \
-  ghostty \
-  zen-browser-bin
+run_step "gui_apps" bash -c '
+sudo snap install swaylock-effects 2>/dev/null || true
+sudo snap install ghostty --edge 2>/dev/null || true
+sudo snap install zen-browser --edge 2>/dev/null || true
+'
 
 # -----------------------------------------------------------------------------
 # Dev tools
 # -----------------------------------------------------------------------------
 
-run_step "dev_tools" yay -S --needed --noconfirm \
-  neovim tmux ripgrep fd wget curl unzip \
-  git github-cli \
-  python python-pip \
-  go rust \
-  lua lazygit opencode \
-  nodejs npm \
-  podman buildah skopeo \
-  kubectl helm aws-cli \
-  openssh rsync
+run_step "dev_tools" sudo apt install -y \
+  neovim \
+  tmux \
+  ripgrep \
+  fd-find \
+  wget \
+  curl \
+  unzip \
+  git \
+  gh \
+  python3 \
+  python3-pip \
+  golang \
+  rustc \
+  cargo \
+  lua5.4 \
+  lazygit \
+  nodejs \
+  npm \
+  podman \
+  buildah \
+  skopeo \
+  kubectl \
+  helm \
+  awscli \
+  openssh \
+  rsync
 
 run_step "install_bun" bash -c '
 command -v bun >/dev/null 2>&1 && exit 0
 curl -fsSL https://bun.sh/install | bash
+'
+
+run_step "install_opencode" bash -c '
+command -v opencode >/dev/null 2>&1 && exit 0
+curl -fsSL https://opencode.ai/install.sh | bash
 '
 
 # -----------------------------------------------------------------------------
