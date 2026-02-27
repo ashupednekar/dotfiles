@@ -2,11 +2,12 @@
 set -euo pipefail
 
 # =============================================================================
-# Resume / State handling (macsetup-style)
+# Resume / State handling
 # =============================================================================
 
 STATE_FILE="$HOME/.cache/waylandsetup.state"
 mkdir -p "$(dirname "$STATE_FILE")"
+touch "$STATE_FILE"
 
 log() { echo ""; echo "==> $1"; }
 mark_done() { echo "$1" >> "$STATE_FILE"; }
@@ -23,21 +24,34 @@ run_step() {
   fi
 }
 
-# =============================================================================
-# Vars
-# =============================================================================
-
 USER_NAME="$(whoami)"
 HOME_DIR="$HOME"
 DOTFILES_DIR="$HOME_DIR/dotfiles"
 
 # =============================================================================
-# Base system + Wayland
+# Bootstrap yay (ONLY pacman usage)
 # =============================================================================
 
-run_step "pacman_wayland" sudo pacman -S --needed --noconfirm \
-  sway waybar mako wl-clipboard grim slurp grimshot \
-  swayidle swaylock xdg-user-dirs \
+run_step "bootstrap_yay" bash -c '
+command -v yay >/dev/null 2>&1 && exit 0
+
+sudo pacman -S --needed --noconfirm base-devel git
+cd /tmp
+rm -rf yay
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si --noconfirm
+'
+
+# =============================================================================
+# Base system + Wayland (yay for everything)
+# =============================================================================
+
+run_step "wayland_base" yay -S --needed --noconfirm \
+  sway swayidle swaylock waybar mako \
+  wl-clipboard grim slurp \
+  sway-contrib \
+  xdg-user-dirs \
   xdg-desktop-portal xdg-desktop-portal-wlr \
   polkit polkit-gnome acpid \
   brightnessctl playerctl jq \
@@ -47,26 +61,15 @@ run_step "pacman_wayland" sudo pacman -S --needed --noconfirm \
 # Fonts
 # =============================================================================
 
-run_step "pacman_fonts" sudo pacman -S --needed --noconfirm \
+run_step "fonts" yay -S --needed --noconfirm \
   ttf-jetbrains-mono \
   noto-fonts noto-fonts-emoji noto-fonts-cjk
 
 # =============================================================================
-# yay sanity
+# GUI / UX (AUR + official mixed)
 # =============================================================================
 
-run_step "check_yay" bash -c '
-command -v yay >/dev/null 2>&1 || {
-  echo "ERROR: yay not installed"
-  exit 1
-}
-'
-
-# =============================================================================
-# AUR GUI / UX
-# =============================================================================
-
-run_step "aur_gui" yay -S --needed --noconfirm \
+run_step "gui_apps" yay -S --needed --noconfirm \
   swaylock-effects \
   ghostty \
   zen-browser-bin
@@ -75,7 +78,7 @@ run_step "aur_gui" yay -S --needed --noconfirm \
 # Dev tools (macsetup parity)
 # =============================================================================
 
-run_step "pacman_dev" sudo pacman -S --needed --noconfirm \
+run_step "dev_tools" yay -S --needed --noconfirm \
   neovim tmux ripgrep fd wget curl unzip \
   git github-cli \
   python python-pip \
@@ -124,7 +127,7 @@ done
 "
 
 # =============================================================================
-# Pretty lockscreen (swaylock-effects)
+# swaylock config
 # =============================================================================
 
 run_step "lockscreen_config" bash -c "
@@ -163,12 +166,15 @@ EOF
 "
 
 # =============================================================================
-# swayidle: lock → suspend → resume-safe
+# swayidle (idempotent)
 # =============================================================================
 
 run_step "swayidle_config" bash -c "
-mkdir -p '$HOME_DIR/.config/sway'
-cat >> '$HOME_DIR/.config/sway/config' << 'EOF'
+cfg='$HOME_DIR/.config/sway/config'
+mkdir -p \"\$(dirname \"\$cfg\")\"
+grep -q '### Idle / Lock / Suspend' \"\$cfg\" 2>/dev/null && exit 0
+
+cat >> \"\$cfg\" << 'EOF'
 
 ### Idle / Lock / Suspend
 exec swayidle -w \
@@ -193,7 +199,7 @@ EOF
 "
 
 # =============================================================================
-# Lid close → suspend (systemd-logind)
+# Lid close → suspend
 # =============================================================================
 
 run_step "lid_suspend" sudo bash -c "
@@ -222,7 +228,7 @@ systemctl enable --now \
 "
 
 # =============================================================================
-# Neovim bootstrap (lazy.nvim style)
+# Neovim bootstrap
 # =============================================================================
 
 run_step "nvim_bootstrap" bash -c '
