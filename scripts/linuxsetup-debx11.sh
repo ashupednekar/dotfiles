@@ -191,19 +191,15 @@ echo 'exec --no-startup-id xautolock -time 5 -locker "i3lock-fancy -f"' >> \"\$c
 # Copy config files
 # -----------------------------------------------------------------------------
 
-run_step "copy_config" bash -c '
+run_step "copy_config" bash -c "
 mkdir -p ~/.config
-cp -r $DOTFILES_DIR/.config/i3 ~/.config
-cp -r $DOTFILES_DIR/.config/nvim ~/.config
-'
+cp -r \$DOTFILES_DIR/.config/i3 ~/.config
+cp -r \$DOTFILES_DIR/.config/nvim ~/.config
+"
 
-# -----------------------------------------------------------------------------
-# Wallpaper
-# -----------------------------------------------------------------------------
-
-run_step "set_wallpaper" bash -c '
-cp $DOTFILES_DIR/wallpaper.png ~/wallpaper.png
-'
+run_step "set_wallpaper" bash -c "
+cp \$DOTFILES_DIR/wallpaper.png ~/wallpaper.png
+"
 
 # -----------------------------------------------------------------------------
 # Done

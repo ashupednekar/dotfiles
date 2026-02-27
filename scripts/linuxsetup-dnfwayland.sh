@@ -218,21 +218,17 @@ run_step "restart_logind" sudo systemctl restart systemd-logind
 # Copy config files
 # -----------------------------------------------------------------------------
 
-run_step "copy_config" bash -c '
+run_step "copy_config" bash -c "
 mkdir -p ~/.config
-cp -r $DOTFILES_DIR/.config/sway ~/.config
-cp -r $DOTFILES_DIR/.config/waybar ~/.config
-cp -r $DOTFILES_DIR/.config/mako ~/.config
-cp -r $DOTFILES_DIR/.config/nvim ~/.config
-'
+cp -r \$DOTFILES_DIR/.config/sway ~/.config
+cp -r \$DOTFILES_DIR/.config/waybar ~/.config
+cp -r \$DOTFILES_DIR/.config/mako ~/.config
+cp -r \$DOTFILES_DIR/.config/nvim ~/.config
+"
 
-# -----------------------------------------------------------------------------
-# Wallpaper
-# -----------------------------------------------------------------------------
-
-run_step "set_wallpaper" bash -c '
-cp $DOTFILES_DIR/wallpaper.png ~/wallpaper.png
-'
+run_step "set_wallpaper" bash -c "
+cp \$DOTFILES_DIR/wallpaper.png ~/wallpaper.png
+"
 
 # -----------------------------------------------------------------------------
 # Done
