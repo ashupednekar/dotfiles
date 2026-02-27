@@ -1,0 +1,36 @@
+# ---- Appearance ----
+clock
+timestr=%H:%M
+datestr=%A, %d %B
+font=JetBrains Mono
+font-size=32
+
+indicator
+indicator-radius=120
+indicator-thickness=10
+
+# ---- Colors ----
+inside-color=00000088
+ring-color=ffffff88
+key-hl-color=88c0d0ff
+separator-color=00000000
+line-color=00000000
+
+inside-ver-color=88c0d0aa
+ring-ver-color=88c0d0ff
+
+inside-wrong-color=bf616aaa
+ring-wrong-color=bf616aff
+
+text-color=ffffffff
+text-ver-color=ffffffff
+text-wrong-color=ffffffff
+
+# ---- Effects ----
+effect-blur=10x10
+effect-vignette=0.4:0.4
+fade-in=0.2
+
+# ---- Behavior ----
+ignore-empty-password
+disable-caps-lock-text
