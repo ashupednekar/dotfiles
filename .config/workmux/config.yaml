@@ -1,0 +1,9 @@
+panes:
+  - command: claude
+    focus: true
+  - command: nvim . 
+    split: horizontal
+    percentage: 70
+  - split: vertical
+    size: 10
+nerdfont: true
