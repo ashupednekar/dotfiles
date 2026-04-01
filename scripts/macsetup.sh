@@ -28,6 +28,9 @@ run_step() {
   fi
 }
 
+run_step "install_rust" bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
+source "$HOME/.cargo/env"     
+
 # -------------------------------
 # SUDO (ask once, keep alive)
 # -------------------------------
@@ -93,8 +96,6 @@ run_step "install_skhd" brew install koekeishiya/formulae/skhd
 # -------------------------------
 # Languages
 # -------------------------------
-run_step "install_rust" sudo bash -c 'curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path'
-source "$HOME/.cargo/env"     
 run_step "install_go" brew install go
 run_step "install_python" brew install python@3.11
 run_step "install_lua" brew install lua
