@@ -78,8 +78,8 @@ for_window [app_id="ghostty"] opacity 0.90
 for_window [app_id="zen-browser"] opacity 0.95
 for_window [floating] opacity 0.96
 
-output * bg ~/dotfiles/wallpaper.png fill
+output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-# BenQ RD280U monitor (needs wlr-randr installed)
-# exec_always wlr-randr --output DP-8 --on --mode 3840x2560 --position 3072,0 || true
-# exec_always wlr-randr --output eDP-1 --mode 3072x1920 --position 0,0 || true
+# BenQ RD280U via Thunderbolt - 4K mode (works in clamshell)
+output DP-8 enable mode 2560x1600 position 0 0
+# output eDP-1 disable  # uncomment for clamshell closed
