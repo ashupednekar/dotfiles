@@ -202,7 +202,10 @@ cp -r $DOTFILES_DIR/.config/sway ~/.config
 cp -r $DOTFILES_DIR/.config/waybar ~/.config
 cp -r $DOTFILES_DIR/.config/mako ~/.config
 cp -r $DOTFILES_DIR/.config/nvim ~/.config
+cp -r $DOTFILES_DIR/.config/swaylock ~/.config
 '
+
+run_step "install_swaybg" yay -S --needed --noconfirm swaybg
 
 # -----------------------------------------------------------------------------
 # Wallpaper
@@ -210,6 +213,10 @@ cp -r $DOTFILES_DIR/.config/nvim ~/.config
 
 run_step "set_wallpaper" bash -c '
 cp $DOTFILES_DIR/wallpaper.png ~/wallpaper.png
+# Set wallpaper in sway config
+if ! grep -q "swaybg" "$HOME/.config/sway/config" 2>/dev/null; then
+    echo "exec_always swaybg -i ~/wallpaper.png -m fill" >> "$HOME/.config/sway/config"
+fi
 '
 
 # -----------------------------------------------------------------------------
