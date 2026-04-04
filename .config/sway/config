@@ -3,6 +3,7 @@ exec_always mako
 exec_always vicinae server
 exec_always gnome-keyring-daemon --start --components=secrets
 exec_always dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec ~/.config/sway/battery-notify.sh
 exec_always swayidle -w \
   timeout 300 '~/.config/sway/lock.sh' \
   timeout 600 'swaymsg "output * power off"' \
@@ -32,8 +33,8 @@ bindsym Mod4+Shift+j move down
 bindsym Mod4+Shift+k move up
 bindsym Mod4+Shift+l move right
 
-bindsym Mod4+Mod1+h resize grow width 5 ppt
-bindsym Mod4+Mod1+l resize shrink width 5 ppt
+bindsym Mod4+Mod1+h resize shrink width 5 ppt
+bindsym Mod4+Mod1+l resize grow width 5 ppt
 bindsym Mod4+Mod1+j resize grow height 5 ppt
 bindsym Mod4+Mod1+k resize shrink height 5 ppt
 
@@ -78,3 +79,7 @@ for_window [app_id="zen-browser"] opacity 0.95
 for_window [floating] opacity 0.96
 
 output * bg ~/dotfiles/wallpaper.png fill
+
+# BenQ RD280U monitor (needs wlr-randr installed)
+# exec_always wlr-randr --output DP-8 --on --mode 3840x2560 --position 3072,0 || true
+# exec_always wlr-randr --output eDP-1 --mode 3072x1920 --position 0,0 || true

@@ -34,8 +34,9 @@
   },
 
   "clock": {
-    "format": "  {:%a %d %b  %H:%M}",
-    "tooltip": false
+    "format": " {:%a %d %b %H:%M}",
+    "tooltip-format": "<big>{:%Y}</big>\n<tt>{:%H:%M}</tt>\n<b>%A</b>",
+    "interval": 60
   },
 
   "battery": {
@@ -44,8 +45,10 @@
       "warning": 30,
       "critical": 15
     },
-    "format": "{icon}  {capacity}%",
-    "format-icons": ["", "", "", "", ""],
+    "format": "{icon} {capacity}%",
+    "format-charging": "⚡ {capacity}%",
+    "format-plugged": "🔌 {capacity}%",
+    "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
     "tooltip": false
   }
 }
