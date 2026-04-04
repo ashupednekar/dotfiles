@@ -64,7 +64,8 @@ run_step "wayland_base" yay -S --needed --noconfirm \
   xdg-desktop-portal xdg-desktop-portal-wlr \
   polkit polkit-gnome acpid \
   brightnessctl playerctl jq \
-  networkmanager bluez bluez-utils
+  networkmanager bluez bluez-utils \
+  wlr-randr
 
 # -----------------------------------------------------------------------------
 # Fonts
@@ -176,16 +177,16 @@ EOF
 "
 
 # -----------------------------------------------------------------------------
-# Lid suspend
+# Lid handling - ignore default so custom handler works (like macOS)
 # -----------------------------------------------------------------------------
 
-run_step "lid_suspend" sudo bash -c "
+run_step "lid_ignore" sudo bash -c "
 mkdir -p /etc/systemd/logind.conf.d
 cat > /etc/systemd/logind.conf.d/lid.conf << 'EOF'
 [Login]
-HandleLidSwitch=suspend
-HandleLidSwitchExternalPower=suspend
-HandleLidSwitchDocked=suspend
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
 EOF
 "
 
