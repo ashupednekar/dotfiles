@@ -53,6 +53,31 @@ SUDO_KEEPALIVE_PID=$!
 trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Config files (copy first so they're in place regardless of install failures)
+# ─────────────────────────────────────────────────────────────────────────────
+run_step "copy_config" bash -c "
+mkdir -p \"\$HOME/.config\"
+
+if [[ '$IS_OMARCHY' == 'true' ]]; then
+  cp -r '$DOTFILES_DIR/.config/hypr' \"\$HOME/.config/\"
+  echo '  → Copied hypr user overrides (omarchy-compatible)'
+else
+  rm -rf \"\$HOME/.config/hypr\"
+  cp -r '$DOTFILES_DIR/.config/hypr-pure' \"\$HOME/.config/hypr\"
+  echo '  → Copied standalone hypr config'
+fi
+
+cp -r '$DOTFILES_DIR/.config/ghostty' \"\$HOME/.config/\"
+cp -r '$DOTFILES_DIR/.config/nvim'    \"\$HOME/.config/\"
+cp -r '$DOTFILES_DIR/.config/mako'    \"\$HOME/.config/\"
+cp    '$DOTFILES_DIR/.config/starship.toml' \"\$HOME/.config/\"
+
+if [[ '$IS_OMARCHY' == 'false' ]]; then
+  cp -r '$DOTFILES_DIR/.config/waybar' \"\$HOME/.config/\"
+fi
+"
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Cleanup bloat apps (before syu so fewer packages to upgrade)
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "cleanup_bloat" bash -c '
@@ -223,35 +248,6 @@ run_step "install_fonts" yay -S --needed --noconfirm \
   noto-fonts noto-fonts-emoji noto-fonts-cjk \
   otf-font-awesome
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Config files
-# ─────────────────────────────────────────────────────────────────────────────
-run_step "copy_config" bash -c "
-mkdir -p \"\$HOME/.config\"
-
-if [[ '$IS_OMARCHY' == 'true' ]]; then
-  # Omarchy mode: copy only the user-override layer
-  # Omarchy sources these from ~/.config/hypr/ and applies them on top of its defaults
-  cp -r '$DOTFILES_DIR/.config/hypr' \"\$HOME/.config/\"
-  echo '  → Copied hypr user overrides (omarchy-compatible)'
-else
-  # Pure Hyprland: install the full standalone config
-  rm -rf \"\$HOME/.config/hypr\"
-  cp -r '$DOTFILES_DIR/.config/hypr-pure' \"\$HOME/.config/hypr\"
-  echo '  → Copied standalone hypr config'
-fi
-
-# Common configs (always)
-cp -r '$DOTFILES_DIR/.config/ghostty' \"\$HOME/.config/\"
-cp -r '$DOTFILES_DIR/.config/nvim'    \"\$HOME/.config/\"
-cp -r '$DOTFILES_DIR/.config/mako'    \"\$HOME/.config/\"
-cp    '$DOTFILES_DIR/.config/starship.toml' \"\$HOME/.config/\"
-
-# Waybar (only for pure hyprland — omarchy manages its own)
-if [[ '$IS_OMARCHY' == 'false' ]]; then
-  cp -r '$DOTFILES_DIR/.config/waybar' \"\$HOME/.config/\"
-fi
-"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Dotfiles
