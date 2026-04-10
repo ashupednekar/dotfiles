@@ -7,10 +7,15 @@ set -euo pipefail
 # ─────────────────────────────────────────────────────────────────────────────
 
 STATE_FILE="$HOME/.cache/setuphyprland.state"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if [[ "${1:-}" == "--no-cache" ]]; then
+  echo "==> --no-cache: clearing state, re-running all steps"
+  rm -f "$STATE_FILE"
+fi
+
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
-
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 log()      { echo ""; echo "==> $1"; }
 mark_done() { echo "$1" >> "$STATE_FILE"; }
