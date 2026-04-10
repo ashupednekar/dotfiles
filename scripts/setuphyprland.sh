@@ -60,10 +60,12 @@ mkdir -p \"\$HOME/.config\"
 
 if [[ '$IS_OMARCHY' == 'true' ]]; then
   cp -r '$DOTFILES_DIR/.config/hypr' \"\$HOME/.config/\"
+  chmod +x \"\$HOME/.config/hypr/scripts\"/*.sh
   echo '  → Copied hypr user overrides (omarchy-compatible)'
 else
   rm -rf \"\$HOME/.config/hypr\"
   cp -r '$DOTFILES_DIR/.config/hypr-pure' \"\$HOME/.config/hypr\"
+  chmod +x \"\$HOME/.config/hypr/scripts\"/*.sh
   echo '  → Copied standalone hypr config'
 fi
 
@@ -252,7 +254,15 @@ run_step "install_fonts" yay -S --needed --noconfirm \
 # ─────────────────────────────────────────────────────────────────────────────
 # Dotfiles
 # ─────────────────────────────────────────────────────────────────────────────
-run_step "copy_zshrc" cp "$DOTFILES_DIR/.zshrc" ~
+run_step "copy_shellrc" bash -c "
+if [[ '$IS_OMARCHY' == 'true' ]]; then
+  # Omarchy manages ~/.bashrc itself — nothing to copy
+  echo '  → Omarchy manages .bashrc, skipping'
+else
+  cp '$DOTFILES_DIR/.bashrc' ~/.bashrc
+  echo '  → Copied .bashrc'
+fi
+"
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Wallpaper
