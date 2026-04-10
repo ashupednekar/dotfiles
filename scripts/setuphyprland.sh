@@ -119,9 +119,9 @@ echo "  → Bloat cleanup done"
 '
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Full system upgrade (-Syu)
+# Sync package database (-Sy) so installs resolve correctly
 # ─────────────────────────────────────────────────────────────────────────────
-run_step "syu" sudo pacman -Syu --noconfirm
+run_step "sync_db" sudo pacman -Sy --noconfirm
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Bootstrap yay (AUR helper)
