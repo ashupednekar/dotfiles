@@ -332,6 +332,15 @@ EOF
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Apple T2 Touch Bar (tiny-dfr)
+# ─────────────────────────────────────────────────────────────────────────────
+run_step "touchbar" bash -c '
+yay -S --needed --noconfirm tiny-dfr
+sudo systemctl enable --now tiny-dfr
+echo "  → Touch Bar daemon enabled"
+'
+
+# ─────────────────────────────────────────────────────────────────────────────
 # System services
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "enable_services" bash -c '
