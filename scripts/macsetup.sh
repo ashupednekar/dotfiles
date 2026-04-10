@@ -135,13 +135,6 @@ brew install --cask font-hack-nerd-font
 brew install --cask font-meslo-lg-nerd-font
 '
 
-# -------------------------------
-# Tmux
-# -------------------------------
-run_step "tmux_setup" bash -c '
-curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh" | bash
-echo "set-option -g status-position top" >> ~/.tmux.conf
-'
 
 # -------------------------------
 # Sketchybar
