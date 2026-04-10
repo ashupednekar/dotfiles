@@ -53,7 +53,73 @@ SUDO_KEEPALIVE_PID=$!
 trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Full system upgrade (-Syu) first
+# Cleanup bloat apps (before syu so fewer packages to upgrade)
+# ─────────────────────────────────────────────────────────────────────────────
+run_step "cleanup_bloat" bash -c '
+echo "  Removing bloat packages (if installed)..."
+
+BLOAT_PKGS=(
+  basecamp
+  chatgpt-desktop
+  chatgpt-desktop-bin
+  caprine
+  teams
+  zoom
+  spotify
+  1password
+  1password-cli
+  obsidian
+  discord
+)
+
+for pkg in "${BLOAT_PKGS[@]}"; do
+  if yay -Q "$pkg" >/dev/null 2>&1; then
+    echo "  → Removing $pkg"
+    yay -Rns --noconfirm "$pkg" 2>/dev/null || true
+  fi
+done
+
+echo "  Removing bloat desktop entries..."
+BLOAT_ENTRIES=(
+  "basecamp"
+  "chatgpt"
+  "ChatGPT"
+  "caprine"
+  "spotify"
+  "1password"
+  "obsidian"
+  "discord"
+  "teams"
+  "zoom"
+  "whatsapp"
+  "youtube"
+  "gmail"
+  "apple-music"
+)
+
+for entry in "${BLOAT_ENTRIES[@]}"; do
+  find "$HOME/.local/share/applications" \
+       /usr/share/applications \
+       /usr/local/share/applications \
+       -iname "*${entry}*" -delete 2>/dev/null || true
+done
+
+# Remove omarchy-created webapp entries (keep only zen/ghostty)
+if [[ -d "$HOME/.local/share/omarchy" ]]; then
+  echo "  Cleaning omarchy webapp entries..."
+  find "$HOME/.local/share/applications" \
+    -name "*.desktop" \
+    -exec grep -l -i -E "basecamp|chatgpt|grok\.com|caprine|spotify|1password|obsidian|discord|zoom|whatsapp|youtube|gmail|music\.apple" {} \; \
+    | xargs rm -f 2>/dev/null || true
+fi
+
+# Update desktop database
+update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
+echo "  → Bloat cleanup done"
+'
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Full system upgrade (-Syu)
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "syu" sudo pacman -Syu --noconfirm
 
@@ -235,74 +301,6 @@ xdg-mime default com.mitchellh.ghostty.desktop x-scheme-handler/terminal 2>/dev/
 run_step "tmux_setup" bash -c '
 curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh" | bash
 echo "set-option -g status-position top" >> ~/.tmux.conf
-'
-
-# ─────────────────────────────────────────────────────────────────────────────
-# Cleanup bloat apps
-# ─────────────────────────────────────────────────────────────────────────────
-run_step "cleanup_bloat" bash -c '
-echo "  Removing bloat packages (if installed)..."
-
-BLOAT_PKGS=(
-  basecamp
-  chatgpt-desktop
-  chatgpt-desktop-bin
-  caprine
-  slack-desktop
-  teams
-  zoom
-  spotify
-  1password
-  1password-cli
-  obsidian
-  discord
-)
-
-for pkg in "${BLOAT_PKGS[@]}"; do
-  if yay -Q "$pkg" >/dev/null 2>&1; then
-    echo "  → Removing $pkg"
-    yay -Rns --noconfirm "$pkg" 2>/dev/null || true
-  fi
-done
-
-echo "  Removing bloat desktop entries..."
-BLOAT_ENTRIES=(
-  "basecamp"
-  "chatgpt"
-  "ChatGPT"
-  "caprine"
-  "spotify"
-  "1password"
-  "obsidian"
-  "discord"
-  "slack"
-  "teams"
-  "zoom"
-  "whatsapp"
-  "youtube"
-  "gmail"
-  "apple-music"
-)
-
-for entry in "${BLOAT_ENTRIES[@]}"; do
-  find "$HOME/.local/share/applications" \
-       /usr/share/applications \
-       /usr/local/share/applications \
-       -iname "*${entry}*" -delete 2>/dev/null || true
-done
-
-# Remove omarchy-created webapp entries (keep only zen/ghostty)
-if [[ -d "$HOME/.local/share/omarchy" ]]; then
-  echo "  Cleaning omarchy webapp entries..."
-  find "$HOME/.local/share/applications" \
-    -name "*.desktop" \
-    -exec grep -l -i -E "basecamp|chatgpt|grok\.com|caprine|spotify|1password|obsidian|discord|slack|zoom|whatsapp|youtube|gmail|music\.apple" {} \; \
-    | xargs rm -f 2>/dev/null || true
-fi
-
-# Update desktop database
-update-desktop-database "$HOME/.local/share/applications" 2>/dev/null || true
-echo "  → Bloat cleanup done"
 '
 
 # ─────────────────────────────────────────────────────────────────────────────
