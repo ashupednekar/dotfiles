@@ -16,8 +16,9 @@ case "${1:-}" in
     rm -f "$STATE_FILE"
     ;;
   --reload)
-    echo "==> --reload: skipping completed steps, reloading Hyprland at end"
+    echo "==> --reload: forcing copy_config + reload_config, skipping everything else"
     FORCE_RELOAD=true
+    sed -i '/^copy_config$/d;/^reload_config$/d' "$STATE_FILE" 2>/dev/null || true
     ;;
 esac
 
