@@ -3,3 +3,7 @@ background-opacity = 0.9
 macos-titlebar-style = hidden
 font-size = 10
 command = tmux new -As home
+
+# Super+C / Super+V copy-paste (Hyprland sends these via sendshortcut)
+keybind = ctrl+insert=copy_to_clipboard
+keybind = shift+insert=paste_from_clipboard
