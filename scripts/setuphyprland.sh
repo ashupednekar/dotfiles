@@ -251,6 +251,11 @@ BLOAT_PKGS=(
   slack-desktop
   teams
   zoom
+  spotify
+  1password
+  1password-cli
+  obsidian
+  discord
 )
 
 for pkg in "${BLOAT_PKGS[@]}"; do
@@ -266,6 +271,17 @@ BLOAT_ENTRIES=(
   "chatgpt"
   "ChatGPT"
   "caprine"
+  "spotify"
+  "1password"
+  "obsidian"
+  "discord"
+  "slack"
+  "teams"
+  "zoom"
+  "whatsapp"
+  "youtube"
+  "gmail"
+  "apple-music"
 )
 
 for entry in "${BLOAT_ENTRIES[@]}"; do
@@ -275,12 +291,12 @@ for entry in "${BLOAT_ENTRIES[@]}"; do
        -iname "*${entry}*" -delete 2>/dev/null || true
 done
 
-# Remove omarchy-created webapp entries for these apps (stored in ~/.local/share/applications/)
+# Remove omarchy-created webapp entries (keep only zen/ghostty)
 if [[ -d "$HOME/.local/share/omarchy" ]]; then
   echo "  Cleaning omarchy webapp entries..."
   find "$HOME/.local/share/applications" \
     -name "*.desktop" \
-    -exec grep -l -i -E "basecamp|chatgpt|grok\.com|caprine" {} \; \
+    -exec grep -l -i -E "basecamp|chatgpt|grok\.com|caprine|spotify|1password|obsidian|discord|slack|zoom|whatsapp|youtube|gmail|music\.apple" {} \; \
     | xargs rm -f 2>/dev/null || true
 fi
 
