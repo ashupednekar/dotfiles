@@ -389,34 +389,10 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 # Reload Hyprland config (if running)
 # ─────────────────────────────────────────────────────────────────────────────
-do_hypr_reload() {
-  if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
-    if [[ "$IS_OMARCHY" == "true" ]] && command -v omarchy-refresh-hyprland >/dev/null 2>&1; then
-      omarchy-refresh-hyprland
-      echo "  → Reloaded via omarchy-refresh-hyprland"
-    else
-      hyprctl reload
-      echo "  → Reloaded via hyprctl"
-    fi
-  else
-    echo "  → Hyprland not running — config will apply on next login"
-  fi
-}
-
-if [[ "$FORCE_RELOAD" == "true" ]]; then
-  log "reload_config (forced)"
-  do_hypr_reload
-fi
-
 run_step "reload_config" bash -c '
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
-  if [[ "'"$IS_OMARCHY"'" == "true" ]] && command -v omarchy-refresh-hyprland >/dev/null 2>&1; then
-    omarchy-refresh-hyprland
-    echo "  → Reloaded via omarchy-refresh-hyprland"
-  else
-    hyprctl reload
-    echo "  → Reloaded via hyprctl"
-  fi
+  hyprctl reload
+  echo "  → Reloaded via hyprctl"
 else
   echo "  → Hyprland not running — config will apply on next login"
 fi
