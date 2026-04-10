@@ -230,6 +230,16 @@ run_step "install_ghostty" yay -S --needed --noconfirm ghostty
 run_step "install_zen"     yay -S --needed --noconfirm zen-browser-bin
 
 # ─────────────────────────────────────────────────────────────────────────────
+# hy3 — i3-style manual tiling plugin for Hyprland
+# ─────────────────────────────────────────────────────────────────────────────
+run_step "install_hy3" bash -c '
+hyprpm update
+hyprpm add https://github.com/outfoxxed/hy3
+hyprpm enable hy3
+echo "  → hy3 installed and enabled"
+'
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Dev tools
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "install_dev_tools" yay -S --needed --noconfirm \
