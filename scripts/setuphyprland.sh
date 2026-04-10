@@ -295,13 +295,6 @@ echo "  → TERMINAL=ghostty written to ~/.config/environment.d/terminal.conf"
 xdg-mime default com.mitchellh.ghostty.desktop x-scheme-handler/terminal 2>/dev/null || true
 '
 
-# ─────────────────────────────────────────────────────────────────────────────
-# Tmux
-# ─────────────────────────────────────────────────────────────────────────────
-run_step "tmux_setup" bash -c '
-curl -fsSL "https://github.com/gpakosz/.tmux/raw/refs/heads/master/install.sh" | bash
-echo "set-option -g status-position top" >> ~/.tmux.conf
-'
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Pure Hyprland only: autologin + auto-start Hyprland
