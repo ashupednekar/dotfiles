@@ -295,8 +295,8 @@ cp '$DOTFILES_DIR/wallpaper.png' ~/wallpaper.png
 echo '  → Wallpaper copied to ~/wallpaper.png'
 
 if [[ -n \"\${HYPRLAND_INSTANCE_SIGNATURE:-}\" ]]; then
-  hyprctl hyprpaper preload ~/wallpaper.png 2>/dev/null || true
-  hyprctl hyprpaper wallpaper ',~/wallpaper.png' 2>/dev/null || true
+  timeout 3 hyprctl hyprpaper preload \"\$HOME/wallpaper.png\" 2>/dev/null || true
+  timeout 3 hyprctl hyprpaper wallpaper \",\$HOME/wallpaper.png\" 2>/dev/null || true
   echo '  → Wallpaper applied via hyprpaper'
 fi
 "
