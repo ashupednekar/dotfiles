@@ -9,10 +9,17 @@ set -euo pipefail
 STATE_FILE="$HOME/.cache/setuphyprland.state"
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-if [[ "${1:-}" == "--no-cache" ]]; then
-  echo "==> --no-cache: clearing state, re-running all steps"
-  rm -f "$STATE_FILE"
-fi
+FORCE_RELOAD=false
+case "${1:-}" in
+  --no-cache)
+    echo "==> --no-cache: clearing state, re-running all steps"
+    rm -f "$STATE_FILE"
+    ;;
+  --reload)
+    echo "==> --reload: skipping completed steps, reloading Hyprland at end"
+    FORCE_RELOAD=true
+    ;;
+esac
 
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
@@ -371,6 +378,25 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 # Reload Hyprland config (if running)
 # ─────────────────────────────────────────────────────────────────────────────
+do_hypr_reload() {
+  if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+    if [[ "$IS_OMARCHY" == "true" ]] && command -v omarchy-refresh-hyprland >/dev/null 2>&1; then
+      omarchy-refresh-hyprland
+      echo "  → Reloaded via omarchy-refresh-hyprland"
+    else
+      hyprctl reload
+      echo "  → Reloaded via hyprctl"
+    fi
+  else
+    echo "  → Hyprland not running — config will apply on next login"
+  fi
+}
+
+if [[ "$FORCE_RELOAD" == "true" ]]; then
+  log "reload_config (forced)"
+  do_hypr_reload
+fi
+
 run_step "reload_config" bash -c '
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
   if [[ "'"$IS_OMARCHY"'" == "true" ]] && command -v omarchy-refresh-hyprland >/dev/null 2>&1; then
