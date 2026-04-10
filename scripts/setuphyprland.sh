@@ -53,6 +53,11 @@ SUDO_KEEPALIVE_PID=$!
 trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
 
 # ─────────────────────────────────────────────────────────────────────────────
+# Full system upgrade (-Syu) first
+# ─────────────────────────────────────────────────────────────────────────────
+run_step "syu" sudo pacman -Syu --noconfirm
+
+# ─────────────────────────────────────────────────────────────────────────────
 # Bootstrap yay (AUR helper)
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "bootstrap_yay" bash -c '
@@ -69,6 +74,7 @@ makepkg -si --noconfirm
 # Rust (for cargo-based tools)
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "install_rust" bash -c '
+command -v rustc >/dev/null 2>&1 && exit 0
 command -v rustup >/dev/null 2>&1 && exit 0
 curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 '
@@ -96,7 +102,7 @@ if [[ "$IS_OMARCHY" == "false" ]]; then
     hyprland hyprpaper hyprlock hypridle \
     xdg-desktop-portal-hyprland \
     waybar mako swaybg \
-    wl-clipboard wl-clip-persist cliphist \
+    wl-clipboard cliphist \
     xdg-utils xdg-user-dirs \
     xdg-desktop-portal xdg-desktop-portal-gtk \
     polkit polkit-gnome \
@@ -109,18 +115,17 @@ if [[ "$IS_OMARCHY" == "false" ]]; then
 else
   # Omarchy already has Hyprland; just ensure clipboard + screenshot tools
   run_step "install_hypr_extras" yay -S --needed --noconfirm \
-    wl-clipboard grim slurp cliphist \
-    xdg-utils
+    wl-clipboard cliphist grim slurp xdg-utils
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Terminal + browser
+# Terminal + browser (AUR)
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "install_ghostty" yay -S --needed --noconfirm ghostty
 run_step "install_zen"     yay -S --needed --noconfirm zen-browser-bin
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Dev tools (mirrors macsetup.sh)
+# Dev tools
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "install_dev_tools" yay -S --needed --noconfirm \
   neovim tmux ripgrep fd wget curl unzip \
@@ -141,11 +146,6 @@ curl -fsSL https://bun.sh/install | bash
 run_step "install_opencode" bash -c '
 command -v opencode >/dev/null 2>&1 && exit 0
 curl -fsSL https://opencode.ai/install | bash
-'
-
-run_step "install_lazygit" bash -c '
-command -v lazygit >/dev/null 2>&1 && exit 0
-go install github.com/jesseduffield/lazygit@latest || true
 '
 
 # ─────────────────────────────────────────────────────────────────────────────
