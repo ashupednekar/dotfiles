@@ -217,6 +217,7 @@ if [[ "$IS_OMARCHY" == "false" ]]; then
     networkmanager bluez bluez-utils acpid \
     pipewire pipewire-alsa pipewire-pulse wireplumber \
     walker-bin \
+    rofi-wayland \
     swayosd-git
 else
   # Omarchy already has Hyprland; just ensure clipboard + screenshot tools

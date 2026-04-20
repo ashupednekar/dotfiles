@@ -8,11 +8,11 @@
   "margin-right": 10,
 
   "modules-left": [
-    "sway/workspaces"
+    "hyprland/workspaces"
   ],
 
   "modules-center": [
-    "sway/window"
+    "hyprland/window"
   ],
 
   "modules-right": [
@@ -20,21 +20,21 @@
     "clock"
   ],
 
-  "sway/workspaces": {
-    "disable-scroll": true,
-    "all-outputs": true,
+  "hyprland/workspaces": {
     "format": "{name}",
-    "current-only": false
+    "sort-by-number": true,
+    "on-scroll-up": "hyprctl dispatch workspace e+1",
+    "on-scroll-down": "hyprctl dispatch workspace e-1"
   },
 
-  "sway/window": {
+  "hyprland/window": {
     "format": "{title}",
     "max-length": 60,
-    "tooltip": false
+    "separate-outputs": true
   },
 
   "clock": {
-    "format": " {:%a %d %b %H:%M}",
+    "format": " {:%a %d %b %H:%M}",
     "tooltip-format": "<big>{:%Y}</big>\n<tt>{:%H:%M}</tt>\n<b>%A</b>",
     "interval": 60
   },
