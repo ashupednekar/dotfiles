@@ -52,14 +52,18 @@ command -v zoxide >/dev/null 2>&1 && exit 0
 curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
 '
 
-# -----------------------------------------------------------------------------
-# Wayland Base (NO swaylock here)
-# -----------------------------------------------------------------------------
 
+# -----------------------------------------------------------------------------
+# FFmpeg
+# -----------------------------------------------------------------------------
+run_step "ffmpeg" yay -S ffmpeg --noconfirm
+
+
+# -----------------------------------------------------------------------------
+# Wayland Base
+# -----------------------------------------------------------------------------
 run_step "wayland_base" yay -S --needed --noconfirm \
-  sway swayidle waybar mako \
   wl-clipboard xclip grim slurp \
-  sway-contrib \
   xdg-user-dirs \
   xdg-desktop-portal xdg-desktop-portal-wlr \
   polkit polkit-gnome acpid \
@@ -111,86 +115,6 @@ curl -fsSL https://bun.sh/install | bash
 
 run_step "enable_services" sudo systemctl enable --now \
   NetworkManager bluetooth acpid
-
-# -----------------------------------------------------------------------------
-# Autologin on tty1
-# -----------------------------------------------------------------------------
-
-run_step "tty_autologin" sudo bash -c "
-mkdir -p /etc/systemd/system/getty@tty1.service.d
-cat > /etc/systemd/system/getty@tty1.service.d/override.conf << EOF
-[Service]
-ExecStart=
-ExecStart=-/usr/bin/agetty --autologin $USER_NAME --noclear %I \$TERM
-EOF
-"
-
-# -----------------------------------------------------------------------------
-# Auto start sway on login
-# -----------------------------------------------------------------------------
-
-run_step "bash_profile" bash -c "
-cat > '$HOME_DIR/.bash_profile' << 'EOF'
-if [[ -z \"\$WAYLAND_DISPLAY\" && \"\$XDG_VTNR\" == \"1\" ]]; then
-  exec sway
-fi
-EOF
-"
-
-# -----------------------------------------------------------------------------
-# swayidle config (clean + safe)
-# -----------------------------------------------------------------------------
-
-run_step "swayidle_config" bash -c "
-mkdir -p '$HOME_DIR/.config/sway'
-cat > '$HOME_DIR/.config/sway/idle.conf' << 'EOF'
-exec_always swayidle -w \
-  timeout 300 'swaylock -f' \
-  timeout 600 'systemctl suspend' \
-  before-sleep 'swaylock -f'
-EOF
-"
-
-run_step "include_idle_in_sway" bash -c "
-cfg='$HOME_DIR/.config/sway/config'
-grep -q 'include ~/.config/sway/idle.conf' \"\$cfg\" 2>/dev/null || \
-echo 'include ~/.config/sway/idle.conf' >> \"\$cfg\"
-"
-
-# -----------------------------------------------------------------------------
-# Pretty swaylock config
-# -----------------------------------------------------------------------------
-
-run_step "lockscreen_config" bash -c "
-mkdir -p '$HOME_DIR/.config/swaylock'
-cat > '$HOME_DIR/.config/swaylock/config' << 'EOF'
-clock
-timestr=%H:%M
-datestr=%A, %d %B
-font=JetBrains Mono
-indicator
-indicator-radius=120
-indicator-thickness=10
-effect-blur=10x10
-fade-in=0.2
-EOF
-"
-
-# -----------------------------------------------------------------------------
-# Lid handling - ignore default so custom handler works (like macOS)
-# -----------------------------------------------------------------------------
-
-run_step "lid_ignore" sudo bash -c "
-mkdir -p /etc/systemd/logind.conf.d
-cat > /etc/systemd/logind.conf.d/lid.conf << 'EOF'
-[Login]
-HandleLidSwitch=ignore
-HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
-EOF
-"
-
-run_step "restart_logind" sudo systemctl restart systemd-logind
 
 # -----------------------------------------------------------------------------
 # Copy config files
