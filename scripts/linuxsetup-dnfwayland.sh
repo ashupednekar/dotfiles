@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-STATE_FILE="$HOME/.cache/waylandsetup.state"
+STATE_FILE="$HOME/.cache/fedora-hyprsetup.state"
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+USER_NAME="$(whoami)"
+
 mkdir -p "$(dirname "$STATE_FILE")"
 touch "$STATE_FILE"
 
@@ -10,7 +13,8 @@ mark_done() { echo "$1" >> "$STATE_FILE"; }
 is_done() { grep -qx "$1" "$STATE_FILE" 2>/dev/null; }
 
 run_step() {
-  local name="$1"; shift
+  local name="$1"
+  shift
   if is_done "$name"; then
     echo "✔ Skipping $name"
   else
@@ -20,9 +24,16 @@ run_step() {
   fi
 }
 
-USER_NAME="$(whoami)"
-HOME_DIR="$HOME"
-DOTFILES_DIR="$HOME_DIR/dotfiles"
+log "Requesting sudo access"
+sudo -v
+(
+  while true; do
+    sudo -n true
+    sleep 60
+  done
+) &
+SUDO_KEEPALIVE_PID=$!
+trap 'kill $SUDO_KEEPALIVE_PID 2>/dev/null || true' EXIT
 
 # -----------------------------------------------------------------------------
 # Shell tooling
@@ -39,83 +50,37 @@ curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh 
 '
 
 # -----------------------------------------------------------------------------
-# Wayland Base (NO swaylock here)
+# Fedora packages for pure Hyprland
 # -----------------------------------------------------------------------------
 
-run_step "wayland_base" sudo dnf install -y \
-  sway \
-  swayidle \
-  waybar \
-  mako \
-  wl-clipboard \
-  xclip \
-  grim \
-  slurp \
-  xdg-user-dirs \
-  xdg-desktop-portal \
-  xdg-desktop-portal-wlr \
-  polkit \
-  polkit-gnome \
-  acpid \
-  brightnessctl \
-  playerctl \
-  jq \
-  NetworkManager \
-  bluez
+run_step "dnf_update" sudo dnf -y upgrade --refresh
 
-# -----------------------------------------------------------------------------
-# Fonts
-# -----------------------------------------------------------------------------
+run_step "hyprland_base" sudo dnf install -y \
+  hyprland hyprpaper hyprlock hypridle \
+  waybar mako \
+  wl-clipboard xclip grim slurp \
+  xdg-user-dirs xdg-utils \
+  xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-hyprland \
+  polkit polkit-gnome \
+  brightnessctl playerctl jq \
+  NetworkManager bluez bluez-tools \
+  pipewire pipewire-alsa pipewire-pulseaudio wireplumber \
+  flatpak
 
 run_step "fonts" sudo dnf install -y \
   jetbrains-mono-fonts \
   google-noto-sans-fonts \
-  google-noto-emoji-color-fonts
-
-# -----------------------------------------------------------------------------
-# GUI / Flathub apps
-# -----------------------------------------------------------------------------
-
-run_step "enable_flathub" bash -c '
-flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-'
-
-run_step "gui_apps" bash -c '
-flatpak install -y flathub com.github/Horus645.swaylock-effects 2>/dev/null || true
-flatpak install -y flathub com.mitchellh.ghostty 2>/dev/null || true
-flatpak install -y flathub com.zen_browser.zen 2>/dev/null || true
-'
-
-# -----------------------------------------------------------------------------
-# Dev tools
-# -----------------------------------------------------------------------------
+  google-noto-emoji-color-fonts \
+  google-noto-cjk-fonts
 
 run_step "dev_tools" sudo dnf install -y \
-  neovim \
-  tmux \
-  ripgrep \
-  fd-find \
-  wget \
-  curl \
-  unzip \
-  git \
-  gh \
-  python3 \
-  python3-pip \
-  golang \
-  rust \
-  lua \
-  lazygit \
-  nodejs \
-  npm \
-  podman \
-  buildah \
-  skopeo \
-  kubectl \
-  helm \
-  awscli \
-  openssh \
-  rsync
+  neovim tmux ripgrep fd-find wget curl unzip \
+  git gh \
+  python3 python3-pip \
+  golang rust cargo \
+  lua nodejs npm \
+  podman buildah skopeo \
+  openssh rsync
 
 run_step "install_bun" bash -c '
 command -v bun >/dev/null 2>&1 && exit 0
@@ -124,19 +89,28 @@ curl -fsSL https://bun.sh/install | bash
 
 run_step "install_opencode" bash -c '
 command -v opencode >/dev/null 2>&1 && exit 0
-curl -fsSL https://opencode.ai/install.sh | bash
+curl -fsSL https://opencode.ai/install | bash
 '
 
 # -----------------------------------------------------------------------------
-# Enable services
+# GUI apps via Flathub
+# -----------------------------------------------------------------------------
+
+run_step "enable_flathub" bash -c '
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+'
+
+run_step "gui_apps" bash -c '
+flatpak install -y flathub com.mitchellh.ghostty 2>/dev/null || true
+flatpak install -y flathub com.zen_browser.zen 2>/dev/null || true
+'
+
+# -----------------------------------------------------------------------------
+# System services and login behavior
 # -----------------------------------------------------------------------------
 
 run_step "enable_services" sudo systemctl enable --now \
-  NetworkManager bluetooth acpid
-
-# -----------------------------------------------------------------------------
-# Autologin on tty1
-# -----------------------------------------------------------------------------
+  NetworkManager bluetooth
 
 run_step "tty_autologin" sudo bash -c "
 mkdir -p /etc/systemd/system/getty@tty1.service.d
@@ -147,98 +121,48 @@ ExecStart=-/usr/bin/agetty --autologin $USER_NAME --noclear %I \$TERM
 EOF
 "
 
-# -----------------------------------------------------------------------------
-# Auto start sway on login
-# -----------------------------------------------------------------------------
-
 run_step "bash_profile" bash -c "
-cat > '$HOME_DIR/.bash_profile' << 'EOF'
+cat > '$HOME/.bash_profile' << 'EOF'
 if [[ -z \"\$WAYLAND_DISPLAY\" && \"\$XDG_VTNR\" == \"1\" ]]; then
-  exec sway
+  exec Hyprland
 fi
 EOF
 "
 
 # -----------------------------------------------------------------------------
-# swayidle config (clean + safe)
-# -----------------------------------------------------------------------------
-
-run_step "swayidle_config" bash -c "
-mkdir -p '$HOME_DIR/.config/sway'
-cat > '$HOME_DIR/.config/sway/idle.conf' << 'EOF'
-exec_always swayidle -w \
-  timeout 300 'swaylock -f' \
-  timeout 600 'systemctl suspend' \
-  before-sleep 'swaylock -f'
-EOF
-"
-
-run_step "include_idle_in_sway" bash -c "
-cfg='$HOME_DIR/.config/sway/config'
-grep -q 'include ~/.config/sway/idle.conf' \"\$cfg\" 2>/dev/null || \
-echo 'include ~/.config/sway/idle.conf' >> \"\$cfg\"
-"
-
-# -----------------------------------------------------------------------------
-# Pretty swaylock config
-# -----------------------------------------------------------------------------
-
-run_step "lockscreen_config" bash -c "
-mkdir -p '$HOME_DIR/.config/swaylock'
-cat > '$HOME_DIR/.config/swaylock/config' << 'EOF'
-clock
-timestr=%H:%M
-datestr=%A, %d %B
-font=JetBrains Mono
-indicator
-indicator-radius=120
-indicator-thickness=10
-effect-blur=10x10
-fade-in=0.2
-EOF
-"
-
-# -----------------------------------------------------------------------------
-# Lid suspend
-# -----------------------------------------------------------------------------
-
-run_step "lid_suspend" sudo bash -c "
-mkdir -p /etc/systemd/logind.conf.d
-cat > /etc/systemd/logind.conf.d/lid.conf << 'EOF'
-[Login]
-HandleLidSwitch=suspend
-HandleLidSwitchExternalPower=suspend
-HandleLidSwitchDocked=suspend
-EOF
-"
-
-run_step "restart_logind" sudo systemctl restart systemd-logind
-
-# -----------------------------------------------------------------------------
-# Copy config files
+# Dotfiles / config (pure Hyprland only)
 # -----------------------------------------------------------------------------
 
 run_step "copy_config" bash -c "
-mkdir -p ~/.config
-cp -r \$DOTFILES_DIR/.config/sway ~/.config
-cp -r \$DOTFILES_DIR/.config/waybar ~/.config
-cp -r \$DOTFILES_DIR/.config/mako ~/.config
-cp -r \$DOTFILES_DIR/.config/nvim ~/.config
+mkdir -p '$HOME/.config'
+rm -rf '$HOME/.config/hypr'
+cp -r '$DOTFILES_DIR/.config/hypr-pure' '$HOME/.config/hypr'
+cp -r '$DOTFILES_DIR/.config/waybar' '$HOME/.config'
+cp -r '$DOTFILES_DIR/.config/mako' '$HOME/.config'
+cp -r '$DOTFILES_DIR/.config/nvim' '$HOME/.config'
+cp -r '$DOTFILES_DIR/.config/ghostty' '$HOME/.config'
+cp '$DOTFILES_DIR/.config/starship.toml' '$HOME/.config'
+chmod +x '$HOME/.config/hypr/scripts/'*.sh 2>/dev/null || true
 "
 
 run_step "set_wallpaper" bash -c "
-cp \$DOTFILES_DIR/wallpaper.png ~/wallpaper.png
+cp '$DOTFILES_DIR/wallpaper.png' '$HOME/wallpaper.png'
 "
 
-# -----------------------------------------------------------------------------
-# Done
-# -----------------------------------------------------------------------------
+run_step "set_defaults" bash -c '
+mkdir -p "$HOME/.config/environment.d"
+cat > "$HOME/.config/environment.d/terminal.conf" << EOF
+TERMINAL=ghostty
+EOF
+for desktop in io.github.zen_browser.zen.desktop zen-browser.desktop zen.desktop; do
+  if xdg-settings set default-web-browser "$desktop" 2>/dev/null; then
+    xdg-mime default "$desktop" x-scheme-handler/http
+    xdg-mime default "$desktop" x-scheme-handler/https
+    break
+  fi
+done
+'
 
 echo ""
-echo "✔ Setup complete."
-echo "Reboot now."
-echo "System will:"
-echo "→ Autologin"
-echo "→ Start sway"
-echo "→ Auto lock after 5 min"
-echo "→ Suspend after 10 min"
+echo "✔ Fedora pure Hyprland setup complete."
+echo "Reboot or log out/in to start Hyprland on tty1."
