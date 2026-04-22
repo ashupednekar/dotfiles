@@ -208,6 +208,7 @@ if [[ "$IS_OMARCHY" == "false" ]]; then
     hyprland hyprpaper hyprlock hypridle \
     xdg-desktop-portal-hyprland \
     waybar mako swaybg \
+    wifui bluetui wiremix \
     wl-clipboard cliphist \
     xdg-utils xdg-user-dirs \
     xdg-desktop-portal xdg-desktop-portal-gtk \
