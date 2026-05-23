@@ -1,4 +1,5 @@
 require('config.lazy')
+require('config.snacks')
 require('config.appearance')
 require('config.remap')
 require('config.lsp')
