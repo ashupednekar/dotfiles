@@ -6,6 +6,11 @@ return {
     { "<leader>gc", "<cmd>Git commit<cr>", desc = "Fugitive Git commit" },
     {
       "<leader>gd",
+      "<cmd>Gvdiffsplit origin/main<cr>",
+      desc = "Diff vs origin/main",
+    },
+    {
+      "<leader>gr",
       function()
         local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("%s+", "")
         vim.cmd("Gvdiffsplit origin/" .. branch)
@@ -101,4 +106,3 @@ return {
     }
   },
 }
-

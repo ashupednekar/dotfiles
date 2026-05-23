@@ -44,6 +44,9 @@ vim.o.expandtab = true
 vim.api.nvim_set_keymap('n', '<leader>|', ':vsplit<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>_', ':split<cr>', { noremap = true, silent = true })
 
+--folds
+vim.keymap.set('n', '<leader>zd', 'zR', { noremap = true, silent = true, desc = 'Open all folds' })
+
 --resize
 vim.api.nvim_set_keymap('n', '<c-j>', ':resize +2<cr>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<c-k>', ':resize -2<cr>', { noremap = true, silent = true })
