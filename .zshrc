@@ -13,10 +13,12 @@ eval "$(zoxide init bash)"
 alias cd=z
 alias vi=nvim
 alias k=kubectl
+alias docker-compose="docker compose"
 
 export _ZO_DOCTOR=0
 export _ZO_EXCLUDE_DIRS="$HOME/worktrees/*"
 
+eval "$(direnv hook zsh)"
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 
@@ -24,3 +26,19 @@ eval "$(zoxide init zsh)"
 
 export PATH=/Users/ashu/.opencode/bin:$PATH
 export PATH="/Users/ashu/.antigravity/antigravity/bin:$PATH"
+
+alias wr="workmux remove --force"
+wa() {
+  local target="$1"
+  shift || true
+
+  if [[ -z "$target" ]]; then
+    workmux add "$@"
+  elif [[ "$target" =~ ^[0-9]+$ ]]; then
+    workmux add --pr "$target" "$@"
+  elif [[ "$target" =~ ^pr/([0-9]+)$ ]]; then
+    workmux add --pr "${match[1]}" "$@"
+  else
+    workmux add "$target" "$@"
+  fi
+}

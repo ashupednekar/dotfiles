@@ -10,7 +10,7 @@ return {
       desc = "Diff vs origin/main",
     },
     {
-      "<leader>gr",
+      "<leader>gR",
       function()
         local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("%s+", "")
         vim.cmd("Gvdiffsplit origin/" .. branch)

@@ -9,6 +9,7 @@ lsp.on_attach(function(client, bufnr)
 
   lsp.default_keymaps({ buffer = bufnr })
   vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+  vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
   vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
@@ -175,4 +176,3 @@ cmp.setup({
     end
   },
 })
-
