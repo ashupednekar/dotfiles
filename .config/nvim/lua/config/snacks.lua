@@ -11,10 +11,14 @@ local function open_pr_buffer(repo, number)
 end
 
 local function open_pr_actions(repo, pr)
+  local number = tonumber(pr.number) or tonumber(pr)
+  local uri = ("gh://%s/pr/%s"):format(repo, number)
   local item = {
     type = "pr",
     repo = repo,
-    number = tonumber(pr.number) or tonumber(pr),
+    number = number,
+    uri = uri,
+    file = uri,
     state = pr.state and pr.state:lower() or "open",
     title = pr.title,
     url = pr.url,
