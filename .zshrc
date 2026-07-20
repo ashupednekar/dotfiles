@@ -61,10 +61,18 @@ function _wa_pr_branch_info {
     --jq '"\(.number)\t\(.headRefName)\t\(.isCrossRepository)"' 2>/dev/null
 }
 
+function _wa_pr_prompt_file {
+  local pr="$1"
+  local prompt_file
+  prompt_file="$(mktemp "${TMPDIR:-/tmp}/workmux-pr-prompt.XXXXXX")" || return
+  print -r -- "Please review PR #$pr. Focus on bugs, regressions, and missing tests." > "$prompt_file"
+  print -r -- "$prompt_file"
+}
+
 function wa {
   local target="$1"
   shift || true
-  local info pr branch cross_ref config_file rc
+  local info pr branch cross_ref config_file prompt_file rc
 
   if [[ -z "$target" ]]; then
     workmux add "$@"
@@ -78,13 +86,14 @@ function wa {
       branch="${info%%$'\t'*}"
       cross_ref="${info#*$'\t'}"
       config_file="$(_wa_pr_config)" || return
+      prompt_file="$(_wa_pr_prompt_file "$pr")" || { rm -f "$config_file"; return; }
       if [[ -n "$branch" ]]; then
-        workmux add --config "$config_file" --open-if-exists --pr "$pr" -p "Please review PR #$pr. Focus on bugs, regressions, and missing tests." "$@" "$branch"
+        workmux add --config "$config_file" --open-if-exists --pr "$pr" -P "$prompt_file" "$@" "$branch"
       else
-        workmux add --config "$config_file" --open-if-exists --pr "$pr" -p "Please review PR #$pr. Focus on bugs, regressions, and missing tests." "$@"
+        workmux add --config "$config_file" --open-if-exists --pr "$pr" -P "$prompt_file" "$@"
       fi
       rc=$?
-      rm -f "$config_file"
+      rm -f "$config_file" "$prompt_file"
       return "$rc"
     fi
   fi
@@ -93,4 +102,35 @@ function wa {
     print -u2 -- "wa: could not resolve '$target' to a pull request; opening it as a branch worktree"
   fi
   workmux add "$target" "$@"
+}
+
+function wclean {
+  workmux remove --gone "$@"
+
+  local branch line current_path current_branch
+  while IFS= read -r line; do
+    case "$line" in
+      worktree\ *)
+        current_path="${line#worktree }"
+        ;;
+      branch\ refs/heads/origin/*)
+        current_branch="${line#branch refs/heads/}"
+        if [[ -n "$current_path" ]]; then
+          if [[ -z "$(git -C "$current_path" status --porcelain 2>/dev/null)" ]]; then
+            git worktree remove "$current_path"
+          else
+            print -u2 -- "wclean: skipping dirty worktree $current_path ($current_branch)"
+          fi
+        fi
+        ;;
+      "")
+        current_path=""
+        current_branch=""
+        ;;
+    esac
+  done < <(git worktree list --porcelain 2>/dev/null)
+
+  for branch in ${(f)"$(git branch --format='%(refname:short)' 'origin/*' 2>/dev/null)"}; do
+    git branch -D "$branch"
+  done
 }
