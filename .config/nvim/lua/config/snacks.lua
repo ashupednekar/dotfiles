@@ -152,7 +152,34 @@ local function open_current_pr_or_picker()
     vim.list_extend(cmd, { "--repo", repo })
   end
 
-  vim.system(cmd, { cwd = vim.fn.getcwd(), text = true }, function(result)
+  local done = false
+  local timer = assert((vim.uv or vim.loop).new_timer())
+  local proc
+
+  local function finish_with_picker()
+    if done then
+      return
+    end
+    done = true
+    timer:stop()
+    timer:close()
+    if proc then
+      pcall(function()
+        proc:kill("sigterm")
+      end)
+    end
+    vim.schedule(open_pr_picker)
+  end
+
+  timer:start(5000, 0, finish_with_picker)
+
+  proc = vim.system(cmd, { cwd = vim.fn.getcwd(), text = true }, function(result)
+    if done then
+      return
+    end
+    done = true
+    timer:stop()
+    timer:close()
     vim.schedule(function()
       if result.code ~= 0 then
         return open_pr_picker()
