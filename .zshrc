@@ -36,8 +36,8 @@ function _wa_pr_config {
   cat > "$config_file" <<'EOF'
 panes:
   - command: codex
-    focus: true
   - command: nvim -c 'lua vim.schedule(function() vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<leader>pr", true, false, true), "m", false) end)' .
+    focus: true
     split: horizontal
     percentage: 70
   - split: vertical
