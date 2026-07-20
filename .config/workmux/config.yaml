@@ -1,5 +1,5 @@
 panes:
-  - command: claude
+  - command: codex 
     focus: true
   - command: nvim . 
     split: horizontal
