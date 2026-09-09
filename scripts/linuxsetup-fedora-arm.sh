@@ -74,8 +74,25 @@ install_packages() {
     google-noto-sans-fonts google-noto-color-emoji-fonts google-noto-cjk-fonts \
     neovim tmux ripgrep fd-find wget curl unzip \
     git gh jq golang python3 python3-pip lua nodejs npm \
-    lazygit podman buildah skopeo \
+    podman buildah skopeo \
     openssh rsync
+}
+
+install_lazygit() {
+  log "Installing lazygit from GitHub releases (no Fedora package)"
+  if command -v lazygit >/dev/null 2>&1; then return; fi
+  local arch
+  case "$(uname -m)" in
+    aarch64) arch="arm64" ;;
+    x86_64)  arch="x86_64" ;;
+    *) die "Unsupported architecture for lazygit: $(uname -m)" ;;
+  esac
+  local version
+  version="$(curl -fsSL https://api.github.com/repos/jesseduffield/lazygit/releases/latest \
+    | jq -r '.tag_name' | sed 's/^v//')"
+  curl -fsSL "https://github.com/jesseduffield/lazygit/releases/download/v${version}/lazygit_${version}_Linux_${arch}.tar.gz" \
+    | tar -xz -C /tmp lazygit
+  sudo install -m 0755 /tmp/lazygit /usr/local/bin/lazygit
 }
 
 install_rust() {
@@ -201,6 +218,7 @@ main() {
   sudo -v
   install_packages
   install_direct_tools
+  install_lazygit
   install_rust
   install_helium
   configure_services
