@@ -35,12 +35,22 @@ preflight() {
   require_path "$DOTFILES_DIR/.config/mako"
   require_path "$DOTFILES_DIR/.config/nvim"
   require_path "$DOTFILES_DIR/.config/ghostty"
+  require_path "$DOTFILES_DIR/.config/alacritty"
+  require_path "$DOTFILES_DIR/.config/sway"
+  require_path "$DOTFILES_DIR/.config/swaylock"
   require_path "$DOTFILES_DIR/.config/starship.toml"
+  require_path "$DOTFILES_DIR/.config/tmux"
+  require_path "$DOTFILES_DIR/.config/workmux"
+  require_path "$DOTFILES_DIR/.config/zed"
 }
 
 install_packages() {
   log "Updating Fedora Asahi Remix"
   sudo dnf --refresh -y upgrade
+
+  log "Enabling Fedora ARM repositories for Hyprland and Ghostty"
+  sudo dnf -y copr enable sdegler/hyprland
+  sudo dnf -y copr enable scottames/ghostty
 
   log "Installing the Hyprland desktop and runtime dependencies"
   sudo dnf install -y \
@@ -49,7 +59,7 @@ install_packages() {
     wl-clipboard grim slurp \
     xdg-user-dirs xdg-utils \
     xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-hyprland \
-    polkit polkit-gnome \
+    polkit lxqt-policykit \
     brightnessctl playerctl jq \
     NetworkManager bluez bluez-tools \
     pipewire pipewire-alsa pipewire-pulseaudio wireplumber \
@@ -61,13 +71,14 @@ install_packages() {
     jetbrains-mono-fonts \
     google-noto-sans-fonts google-noto-color-emoji-fonts google-noto-cjk-fonts \
     neovim tmux ripgrep fd-find wget curl unzip \
-    git gh python3 python3-pip golang rust cargo lua nodejs npm \
-    podman buildah skopeo openssh rsync starship zoxide
+    git gh python3 python3-pip lua nodejs npm \
+    openssh rsync
 }
 
-install_optional_tools() {
-  log "Installing Bun and OpenCode"
-  command -v bun >/dev/null 2>&1 || curl -fsSL https://bun.sh/install | bash
+install_direct_tools() {
+  log "Installing upstream command-line tools"
+  command -v starship >/dev/null 2>&1 || curl -fsSL https://starship.rs/install.sh | sh -s -- --yes
+  command -v zoxide >/dev/null 2>&1 || curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
   command -v opencode >/dev/null 2>&1 || curl -fsSL https://opencode.ai/install | bash
 }
 
@@ -84,6 +95,17 @@ configure_services() {
   log "Keeping the GNOME login and lock screen"
   sudo systemctl set-default graphical.target
   sudo systemctl enable gdm.service
+
+  # Make Hyprland the persistent default for this user in GDM. The gear menu
+  # still allows selecting GNOME for an individual login.
+  local account_file="/var/lib/AccountsService/users/$LOGIN_USER"
+  sudo install -d -m 0755 /var/lib/AccountsService/users
+  if sudo test -f "$account_file"; then
+    sudo sed -i -E '/^(Session|XSession)=/d' "$account_file"
+    sudo sed -i '/^\[User\]/a Session=hyprland\nXSession=hyprland' "$account_file"
+  else
+    printf '[User]\nSession=hyprland\nXSession=hyprland\n' | sudo tee "$account_file" >/dev/null
+  fi
 
   # Remove only the tty1 override created by older versions of this script.
   local getty_override="/etc/systemd/system/getty@tty1.service.d/override.conf"
@@ -117,7 +139,13 @@ configure_dotfiles() {
   backup_and_copy "$DOTFILES_DIR/.config/mako" "$HOME/.config/mako"
   backup_and_copy "$DOTFILES_DIR/.config/nvim" "$HOME/.config/nvim"
   backup_and_copy "$DOTFILES_DIR/.config/ghostty" "$HOME/.config/ghostty"
+  backup_and_copy "$DOTFILES_DIR/.config/alacritty" "$HOME/.config/alacritty"
+  backup_and_copy "$DOTFILES_DIR/.config/sway" "$HOME/.config/sway"
+  backup_and_copy "$DOTFILES_DIR/.config/swaylock" "$HOME/.config/swaylock"
   backup_and_copy "$DOTFILES_DIR/.config/starship.toml" "$HOME/.config/starship.toml"
+  backup_and_copy "$DOTFILES_DIR/.config/tmux" "$HOME/.config/tmux"
+  backup_and_copy "$DOTFILES_DIR/.config/workmux" "$HOME/.config/workmux"
+  backup_and_copy "$DOTFILES_DIR/.config/zed" "$HOME/.config/zed"
   chmod +x "$HOME/.config/hypr/scripts/"*.sh
 
   mkdir -p "$HOME/.config/environment.d"
@@ -143,9 +171,9 @@ set_defaults() {
 main() {
   preflight
   log "Requesting sudo access"
-  sudo -v
+  sudo -n true || echo "root" | sudo -S -v
   install_packages
-  install_optional_tools
+  install_direct_tools
   install_flatpaks
   configure_services
   verify_hyprland_session
@@ -153,7 +181,7 @@ main() {
   set_defaults
 
   printf '\n✔ Fedora Asahi Remix Hyprland setup complete.\n'
-  printf 'Reboot, choose your user in GDM, then use the gear icon to choose Hyprland.\n'
+  printf 'Reboot; GDM will select Hyprland by default. Use its gear icon to choose GNOME instead.\n'
   printf 'Any replaced dotfiles were saved under: %s\n' "$BACKUP_DIR"
 }
 
