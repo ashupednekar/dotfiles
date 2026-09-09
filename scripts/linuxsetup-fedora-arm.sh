@@ -73,8 +73,18 @@ install_packages() {
     jetbrains-mono-fonts \
     google-noto-sans-fonts google-noto-color-emoji-fonts google-noto-cjk-fonts \
     neovim tmux ripgrep fd-find wget curl unzip \
-    git gh python3 python3-pip lua nodejs npm \
+    git gh jq golang python3 python3-pip lua nodejs npm \
+    lazygit podman buildah skopeo \
     openssh rsync
+}
+
+install_rust() {
+  log "Installing Rust (for cargo-based tools)"
+  if ! command -v rustc >/dev/null 2>&1 && ! command -v rustup >/dev/null 2>&1; then
+    curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
+  fi
+  # shellcheck source=/dev/null
+  [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
 }
 
 install_direct_tools() {
@@ -82,6 +92,7 @@ install_direct_tools() {
   command -v starship >/dev/null 2>&1 || curl -fsSL https://starship.rs/install.sh | sh -s -- --yes
   command -v zoxide >/dev/null 2>&1 || curl -fsSL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
   command -v opencode >/dev/null 2>&1 || curl -fsSL https://opencode.ai/install | bash
+  command -v bun >/dev/null 2>&1 || curl -fsSL https://bun.sh/install | bash
 }
 
 install_helium() {
@@ -190,6 +201,7 @@ main() {
   sudo -v
   install_packages
   install_direct_tools
+  install_rust
   install_helium
   configure_services
   verify_hyprland_session
