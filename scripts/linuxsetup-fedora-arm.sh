@@ -56,6 +56,7 @@ install_packages() {
 
   log "Installing the Hyprland desktop and runtime dependencies"
   sudo dnf install -y \
+    dbus-devel pkgconf-pkg-config \
     hyprland hyprlock hypridle \
     waybar mako rofi-wayland swaybg \
     wl-clipboard grim slurp \

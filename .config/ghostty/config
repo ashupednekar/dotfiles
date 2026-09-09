@@ -1,7 +1,7 @@
 theme = Tomorrow Night Bright
 background-opacity = 0.9
 macos-titlebar-style = hidden
-font-size = 10
+font-size = 12
 command = tmux new -As home
 
 # Super+C / Super+V copy-paste (Hyprland sends these via sendshortcut)
