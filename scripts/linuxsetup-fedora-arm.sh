@@ -42,20 +42,22 @@ preflight() {
   require_path "$DOTFILES_DIR/.config/tmux"
   require_path "$DOTFILES_DIR/.config/workmux"
   require_path "$DOTFILES_DIR/.config/zed"
+  require_path "$DOTFILES_DIR/wallpaper.png"
 }
 
 install_packages() {
   log "Updating Fedora Asahi Remix"
   sudo dnf --refresh -y upgrade
 
-  log "Enabling Fedora ARM repositories for Hyprland and Ghostty"
+  log "Enabling Fedora ARM repositories for Hyprland, Ghostty and Helium"
   sudo dnf -y copr enable sdegler/hyprland
   sudo dnf -y copr enable scottames/ghostty
+  sudo dnf -y copr enable imput/helium
 
   log "Installing the Hyprland desktop and runtime dependencies"
   sudo dnf install -y \
     hyprland hyprlock hypridle \
-    waybar mako rofi-wayland \
+    waybar mako rofi-wayland swaybg \
     wl-clipboard grim slurp \
     xdg-user-dirs xdg-utils \
     xdg-desktop-portal xdg-desktop-portal-gtk xdg-desktop-portal-hyprland \
@@ -82,10 +84,9 @@ install_direct_tools() {
   command -v opencode >/dev/null 2>&1 || curl -fsSL https://opencode.ai/install | bash
 }
 
-install_flatpaks() {
-  log "Installing Zen from Flathub"
-  flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-  flatpak --user install -y flathub app.zen_browser.zen
+install_helium() {
+  log "Installing Helium browser"
+  sudo dnf install -y helium-bin
 }
 
 configure_services() {
@@ -113,6 +114,20 @@ configure_services() {
     sudo rm -f "$getty_override"
     sudo rmdir /etc/systemd/system/getty@tty1.service.d 2>/dev/null || true
     sudo systemctl daemon-reload
+  fi
+
+  # Keep the currently working kernel as the default, but do not show the
+  # Fedora/GRUB menu on every boot. Older kernels remain available for recovery.
+  if command -v grubby >/dev/null 2>&1; then
+    local current_kernel
+    current_kernel="$(sudo grubby --default-kernel 2>/dev/null || true)"
+    [[ -n "$current_kernel" ]] && sudo grubby --set-default "$current_kernel"
+  fi
+  if [[ -f /etc/default/grub ]] && command -v grub2-mkconfig >/dev/null 2>&1; then
+    sudo sed -i -E 's/^GRUB_TIMEOUT_STYLE=.*/GRUB_TIMEOUT_STYLE=hidden/; s/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub
+    sudo grep -q '^GRUB_TIMEOUT_STYLE=' /etc/default/grub || sudo tee -a /etc/default/grub >/dev/null <<< 'GRUB_TIMEOUT_STYLE=hidden'
+    sudo grep -q '^GRUB_TIMEOUT=' /etc/default/grub || sudo tee -a /etc/default/grub >/dev/null <<< 'GRUB_TIMEOUT=0'
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
   fi
 }
 
@@ -146,21 +161,22 @@ configure_dotfiles() {
   backup_and_copy "$DOTFILES_DIR/.config/tmux" "$HOME/.config/tmux"
   backup_and_copy "$DOTFILES_DIR/.config/workmux" "$HOME/.config/workmux"
   backup_and_copy "$DOTFILES_DIR/.config/zed" "$HOME/.config/zed"
+  backup_and_copy "$DOTFILES_DIR/wallpaper.png" "$HOME/wallpaper.png"
   chmod +x "$HOME/.config/hypr/scripts/"*.sh
 
   mkdir -p "$HOME/.config/environment.d"
   xdg-user-dirs-update
   cat >"$HOME/.config/environment.d/terminal.conf" <<'EOF'
 TERMINAL=ghostty
-BROWSER=flatpak run app.zen_browser.zen
+BROWSER=helium
 EOF
 }
 
 set_defaults() {
-  log "Setting Zen as the default browser"
-  xdg-mime default app.zen_browser.zen.desktop x-scheme-handler/http
-  xdg-mime default app.zen_browser.zen.desktop x-scheme-handler/https
-  xdg-mime default app.zen_browser.zen.desktop text/html
+  log "Setting Helium as the default browser"
+  xdg-mime default helium.desktop x-scheme-handler/http
+  xdg-mime default helium.desktop x-scheme-handler/https
+  xdg-mime default helium.desktop text/html
 
   # Keep the existing GNOME session Mac-like until the switch to Hyprland.
   if command -v gsettings >/dev/null; then
@@ -171,10 +187,10 @@ set_defaults() {
 main() {
   preflight
   log "Requesting sudo access"
-  sudo -n true || echo "root" | sudo -S -v
+  sudo -v
   install_packages
   install_direct_tools
-  install_flatpaks
+  install_helium
   configure_services
   verify_hyprland_session
   configure_dotfiles
