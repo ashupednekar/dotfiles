@@ -38,3 +38,4 @@ eval "$(zoxide init bash)"
 
 export PATH=/Users/ashu/.opencode/bin:$PATH
 export PATH="/Users/ashu/.antigravity/antigravity/bin:$PATH"
+export PATH=$HOME/.istioctl/bin:$PATH
