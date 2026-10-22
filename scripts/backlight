@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Control the built-in keyboard backlight. Examples: backlight, backlight 30%, backlight off.
+set -euo pipefail
+
+level=${1:-50%}
+case "$level" in
+    on) level=50% ;;
+    off) level=0% ;;
+    *%)
+        percent=${level%\%}
+        if [[ ! $percent =~ ^[0-9]{1,3}$ ]] || (( 10#$percent > 100 )); then
+            echo 'Usage: backlight [0%-100%|on|off]' >&2
+            exit 2
+        fi
+        ;;
+    *) echo 'Usage: backlight [0%-100%|on|off]' >&2; exit 2 ;;
+esac
+
+exec /usr/bin/brightnessctl --device='white:kbd_backlight' set "$level"

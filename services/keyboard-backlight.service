@@ -1,0 +1,12 @@
+[Unit]
+Description=Turn on the built-in keyboard backlight
+ConditionPathExists=/sys/class/leds/white:kbd_backlight
+After=systemd-udev-trigger.service systemd-backlight@leds:white:kbd_backlight.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backlight 50%
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

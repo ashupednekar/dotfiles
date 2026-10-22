@@ -43,6 +43,8 @@ preflight() {
   require_path "$DOTFILES_DIR/.config/workmux"
   require_path "$DOTFILES_DIR/.config/zed"
   require_path "$DOTFILES_DIR/wallpaper.png"
+  require_path "$DOTFILES_DIR/scripts/backlight"
+  require_path "$DOTFILES_DIR/services/keyboard-backlight.service"
 }
 
 install_packages() {
@@ -160,6 +162,14 @@ configure_services() {
   fi
 }
 
+configure_keyboard_backlight() {
+  log "Installing keyboard backlight control and restoring 50% brightness at boot"
+  sudo install -o root -g root -m 0755 "$DOTFILES_DIR/scripts/backlight" /usr/local/bin/backlight
+  sudo install -o root -g root -m 0644 "$DOTFILES_DIR/services/keyboard-backlight.service" /etc/systemd/system/keyboard-backlight.service
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now keyboard-backlight.service
+}
+
 verify_hyprland_session() {
   local session_file="/usr/share/wayland-sessions/hyprland.desktop"
   [[ -f "$session_file" ]] || die "Hyprland installed without its GDM session file: $session_file"
@@ -223,6 +233,7 @@ main() {
   install_rust
   install_helium
   configure_services
+  configure_keyboard_backlight
   verify_hyprland_session
   configure_dotfiles
   set_defaults
