@@ -82,6 +82,9 @@ run_step "dev_tools" sudo dnf install -y \
   podman buildah skopeo \
   openssh rsync
 
+run_step "enable_zen_copr" sudo dnf -y copr enable sneexy/zen-browser
+run_step "install_zen_browser" sudo dnf install -y zen-browser
+
 run_step "install_bun" bash -c '
 command -v bun >/dev/null 2>&1 && exit 0
 curl -fsSL https://bun.sh/install | bash
@@ -102,7 +105,6 @@ flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flat
 
 run_step "gui_apps" bash -c '
 flatpak install -y flathub com.mitchellh.ghostty 2>/dev/null || true
-flatpak install -y flathub com.zen_browser.zen 2>/dev/null || true
 '
 
 # -----------------------------------------------------------------------------
