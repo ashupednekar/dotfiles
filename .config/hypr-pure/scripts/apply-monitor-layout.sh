@@ -3,7 +3,7 @@ set -euo pipefail
 
 internal="${HYPR_INTERNAL_MONITOR:-eDP-1}"
 external_scale="${HYPR_EXTERNAL_SCALE:-1.5}"
-internal_scale="${HYPR_INTERNAL_SCALE:-auto}"
+internal_scale="${HYPR_INTERNAL_SCALE:-1.2}"
 
 lid_state() {
   local state_file
