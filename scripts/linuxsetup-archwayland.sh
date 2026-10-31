@@ -240,6 +240,10 @@ else
   # launcher tools used by the personal keybindings.
   run_step "install_hypr_extras" yay -S --needed --noconfirm \
     wl-clipboard cliphist grim slurp xdg-utils rofi-wayland
+  echo "Setting up airdrop"
+  yay -S omdrop-owl --needed --noconfirm
+  omarchy plugin add https://github.com/netmojo-systems/omdrop-plugin.git
+  echo "Airdrop set up successfully"
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -471,11 +475,5 @@ else
   echo "→ Pure Hyprland: full config in ~/.config/hypr/"
   echo "→ Reboot or log out and back in to start Hyprland"
 fi
-echo "Setting up airdrop"
-if [[ '$IS_OMARCHY' == 'true' ]]; then
-  yay -S omdrop-owl
-  omarchy plugin add https://github.com/netmojo-systems/omdrop-plugin.git
-fi
-echo "Airdrop set up successfully"
 echo ""
 echo "Re-run the script at any time — completed steps are skipped automatically."
