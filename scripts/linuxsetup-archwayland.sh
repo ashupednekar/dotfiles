@@ -272,11 +272,19 @@ curl -fsSL https://opencode.ai/install | bash
 # ─────────────────────────────────────────────────────────────────────────────
 # Fonts
 # ─────────────────────────────────────────────────────────────────────────────
-run_step "install_fonts" yay -S --needed --noconfirm \
-  ttf-jetbrains-mono \
-  ttf-jetbrains-mono-nerd \
-  noto-fonts noto-fonts-emoji noto-fonts-cjk \
-  otf-font-awesome
+if [[ "$IS_OMARCHY" == "true" ]]; then
+  # Omarchy supplies ttf-jetbrains-mono-nerd-basic; the full Arch Nerd Font
+  # package installs overlapping files, so leave Omarchy's package in place.
+  run_step "install_fonts" yay -S --needed --noconfirm \
+    noto-fonts noto-fonts-emoji noto-fonts-cjk \
+    otf-font-awesome
+else
+  run_step "install_fonts" yay -S --needed --noconfirm \
+    ttf-jetbrains-mono \
+    ttf-jetbrains-mono-nerd \
+    noto-fonts noto-fonts-emoji noto-fonts-cjk \
+    otf-font-awesome
+fi
 
 
 # ─────────────────────────────────────────────────────────────────────────────
