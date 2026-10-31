@@ -471,5 +471,11 @@ else
   echo "→ Pure Hyprland: full config in ~/.config/hypr/"
   echo "→ Reboot or log out and back in to start Hyprland"
 fi
+echo "Setting up airdrop"
+if [[ '$IS_OMARCHY' == 'true' ]]; then
+  yay -S omdrop-owl
+  omarchy plugin add https://github.com/netmojo-systems/omdrop-plugin.git
+fi
+echo "Airdrop set up successfully"
 echo ""
 echo "Re-run the script at any time — completed steps are skipped automatically."
