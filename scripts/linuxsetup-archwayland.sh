@@ -88,10 +88,16 @@ fi
 cp -r '$DOTFILES_DIR/.config/ghostty' \"\$HOME/.config/\"
 cp -r '$DOTFILES_DIR/.config/nvim'    \"\$HOME/.config/\"
 cp -r '$DOTFILES_DIR/.config/mako'    \"\$HOME/.config/\"
+mkdir -p \"\$HOME/.config/tmux\"
+cp -r '$DOTFILES_DIR/.config/tmux/.' \"\$HOME/.config/tmux/\"
 cp    '$DOTFILES_DIR/.config/starship.toml' \"\$HOME/.config/\"
 
 if [[ '$IS_OMARCHY' == 'false' ]]; then
   cp -r '$DOTFILES_DIR/.config/waybar' \"\$HOME/.config/\"
+fi
+
+if [[ '$IS_OMARCHY' == 'true' ]] && ! command -v rofi >/dev/null 2>&1; then
+  echo '  → rofi not installed; run without --reload to install rofi-wayland'
 fi
 "
 
@@ -224,9 +230,10 @@ if [[ "$IS_OMARCHY" == "false" ]]; then
     rofi-wayland \
     swayosd-git
 else
-  # Omarchy already has Hyprland; just ensure clipboard + screenshot tools
+  # Omarchy already has Hyprland; just ensure clipboard, screenshot, and
+  # launcher tools used by the personal keybindings.
   run_step "install_hypr_extras" yay -S --needed --noconfirm \
-    wl-clipboard cliphist grim slurp xdg-utils
+    wl-clipboard cliphist grim slurp xdg-utils rofi-wayland
 fi
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -417,6 +424,11 @@ if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
   echo "  → Reloaded via hyprctl"
 else
   echo "  → Hyprland not running — config will apply on next login"
+fi
+
+if tmux info >/dev/null 2>&1; then
+  tmux source-file "$HOME/.config/tmux/tmux.conf" 2>/dev/null || true
+  echo "  → Reloaded tmux config"
 fi
 '
 
