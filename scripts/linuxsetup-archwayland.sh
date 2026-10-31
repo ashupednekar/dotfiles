@@ -3,7 +3,7 @@ set -euo pipefail
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Hyprland setup — mirrors macsetup.sh pattern (idempotent, state-file based)
-# Supports: omarchy-installed systems (layered config) + pure Hyprland
+# Supports: Omarchy Lua overrides + pure Hyprland
 # ─────────────────────────────────────────────────────────────────────────────
 
 STATE_FILE="$HOME/.cache/setuphyprland.state"
@@ -44,7 +44,7 @@ run_step() {
 # Detect omarchy
 # ─────────────────────────────────────────────────────────────────────────────
 IS_OMARCHY=false
-if [[ -d "$HOME/.local/share/omarchy" ]]; then
+if command -v omarchy >/dev/null 2>&1 || [[ -d "${OMARCHY_PATH:-/usr/share/omarchy}" || -d "$HOME/.local/share/omarchy" ]]; then
   IS_OMARCHY=true
   log "Omarchy detected — will use omarchy-compatible config overrides"
 else
@@ -72,9 +72,12 @@ run_step "copy_config" bash -c "
 mkdir -p \"\$HOME/.config\"
 
 if [[ '$IS_OMARCHY' == 'true' ]]; then
-  cp -r '$DOTFILES_DIR/.config/hypr' \"\$HOME/.config/\"
+  mkdir -p \"\$HOME/.config/hypr/scripts\"
+  cp '$DOTFILES_DIR/.config/hypr-omarchy/'*.lua \"\$HOME/.config/hypr/\"
+  cp '$DOTFILES_DIR/.config/hypr-omarchy/hyprsunset.conf' \"\$HOME/.config/hypr/\"
+  cp '$DOTFILES_DIR/.config/hypr-omarchy/scripts/'*.sh \"\$HOME/.config/hypr/scripts/\"
   chmod +x \"\$HOME/.config/hypr/scripts\"/*.sh
-  echo '  → Copied hypr user overrides (omarchy-compatible)'
+  echo '  → Copied Omarchy Lua overrides (Omarchy owns hyprland.lua)'
 else
   rm -rf \"\$HOME/.config/hypr\"
   cp -r '$DOTFILES_DIR/.config/hypr-pure' \"\$HOME/.config/hypr\"
@@ -296,9 +299,14 @@ run_step "set_wallpaper" bash -c "
 cp '$DOTFILES_DIR/wallpaper.png' ~/wallpaper.png
 echo '  → Wallpaper copied to ~/wallpaper.png'
 
-timeout 3 hyprctl hyprpaper preload \"\$HOME/wallpaper.png\" &>/dev/null || true
-timeout 3 hyprctl hyprpaper wallpaper \",\$HOME/wallpaper.png\" &>/dev/null || true
-echo '  → Wallpaper will apply on next login via hyprpaper.conf'
+if [[ '$IS_OMARCHY' == 'true' ]]; then
+  omarchy theme bg set \"\$HOME/wallpaper.png\"
+  echo '  → Set wallpaper through Omarchy'
+else
+  timeout 3 hyprctl hyprpaper preload \"\$HOME/wallpaper.png\" &>/dev/null || true
+  timeout 3 hyprctl hyprpaper wallpaper \",\$HOME/wallpaper.png\" &>/dev/null || true
+  echo '  → Wallpaper will apply on next login via hyprpaper.conf'
+fi
 "
 
 # ─────────────────────────────────────────────────────────────────────────────
