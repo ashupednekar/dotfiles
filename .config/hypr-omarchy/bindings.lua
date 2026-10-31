@@ -1,8 +1,13 @@
 -- Personal Omarchy keybindings. Defaults are loaded before this file.
--- o.rebind removes an existing Omarchy binding before installing the replacement.
+-- Use Omarchy's rebind helper when available; otherwise use Hyprland's Lua API.
 
 local function rebind(keys, description, command)
-  o.rebind(keys, description, command)
+  if type(o.rebind) == "function" then
+    o.rebind(keys, description, command)
+  else
+    hl.unbind(keys)
+    o.bind(keys, description, command)
+  end
 end
 
 -- Apps and launcher
