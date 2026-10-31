@@ -89,6 +89,11 @@ fi
 cp -r '$DOTFILES_DIR/.config/ghostty' \"\$HOME/.config/\"
 cp -r '$DOTFILES_DIR/.config/nvim'    \"\$HOME/.config/\"
 cp -r '$DOTFILES_DIR/.config/mako'    \"\$HOME/.config/\"
+if [[ '$IS_OMARCHY' == 'true' ]]; then
+  # Start from a clean directory so Omarchy's old tmux config (and any
+  # leftover tmux.conf.local) cannot keep stale keybindings around.
+  rm -rf \"\$HOME/.config/tmux\"
+fi
 mkdir -p \"\$HOME/.config/tmux\"
 cp -r '$DOTFILES_DIR/.config/tmux/.' \"\$HOME/.config/tmux/\"
 cp    '$DOTFILES_DIR/.config/starship.toml' \"\$HOME/.config/\"
