@@ -16,9 +16,9 @@ case "${1:-}" in
     rm -f "$STATE_FILE"
     ;;
   --reload)
-    echo "==> --reload: forcing copy_config + reload_config, skipping everything else"
+    echo "==> --reload: forcing config + shell rc copy, then reload"
     FORCE_RELOAD=true
-    sed -i '/^copy_config$/d;/^reload_config$/d' "$STATE_FILE" 2>/dev/null || true
+    sed -i '/^copy_config$/d;/^copy_shellrc$/d;/^reload_config$/d' "$STATE_FILE" 2>/dev/null || true
     ;;
 esac
 
