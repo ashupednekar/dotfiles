@@ -1,0 +1,5 @@
+# Omarchy shell typography.
+# The default 12px is small next to the 16pt terminal font; this also scales
+# the bar height and spacing because they track the font size.
+[font]
+base-size = 16

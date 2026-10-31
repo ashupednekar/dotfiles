@@ -72,10 +72,11 @@ run_step "copy_config" bash -c "
 mkdir -p \"\$HOME/.config\"
 
 if [[ '$IS_OMARCHY' == 'true' ]]; then
-  mkdir -p \"\$HOME/.config/hypr/scripts\"
+  mkdir -p \"\$HOME/.config/hypr/scripts\" \"\$HOME/.config/omarchy\"
   cp '$DOTFILES_DIR/.config/hypr-omarchy/'*.lua \"\$HOME/.config/hypr/\"
   cp '$DOTFILES_DIR/.config/hypr-omarchy/hyprsunset.conf' \"\$HOME/.config/hypr/\"
   cp '$DOTFILES_DIR/.config/hypr-omarchy/scripts/'*.sh \"\$HOME/.config/hypr/scripts/\"
+  cp '$DOTFILES_DIR/.config/omarchy/shell.toml' \"\$HOME/.config/omarchy/\"
   chmod +x \"\$HOME/.config/hypr/scripts\"/*.sh
   echo '  → Copied Omarchy Lua overrides (Omarchy owns hyprland.lua)'
 else
