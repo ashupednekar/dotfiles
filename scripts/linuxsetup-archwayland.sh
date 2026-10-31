@@ -305,8 +305,24 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 run_step "copy_shellrc" bash -c "
 if [[ '$IS_OMARCHY' == 'true' ]]; then
-  # Omarchy manages ~/.bashrc itself — nothing to copy
-  echo '  → Omarchy manages .bashrc, skipping'
+  # Keep Omarchy's env bootstrap, history settings, mise/fzf integration and
+  # aliases, then layer the dotfiles .bashrc on top of it.
+  mkdir -p \"\$HOME/.config/dotfiles\"
+  cp '$DOTFILES_DIR/.bashrc' \"\$HOME/.config/dotfiles/bashrc\"
+  cat > \"\$HOME/.bashrc\" << 'EOF'
+# Omarchy environment (OMARCHY_PATH + PATH), needed even for non-interactive shells
+[[ -r /usr/share/omarchy/default/bash/env-bootstrap ]] && source /usr/share/omarchy/default/bash/env-bootstrap
+
+# If not running interactively, don't do anything else (leave this above the rc source)
+[[ \$- != *i* ]] && return
+
+# All the default Omarchy aliases and functions
+source \"\$OMARCHY_PATH/default/bash/rc\"
+
+# Dotfiles additions (exports, aliases, functions)
+[[ -r \"\$HOME/.config/dotfiles/bashrc\" ]] && source \"\$HOME/.config/dotfiles/bashrc\"
+EOF
+  echo '  → Installed .bashrc (Omarchy defaults + dotfiles additions)'
 else
   cp '$DOTFILES_DIR/.bashrc' ~/.bashrc
   echo '  → Copied .bashrc'
