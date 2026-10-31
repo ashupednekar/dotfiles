@@ -79,6 +79,7 @@ run_step "dev_tools" sudo dnf install -y \
   python3 python3-pip \
   golang rust cargo \
   lua nodejs npm \
+  mkcert nss-tools \
   podman buildah skopeo \
   openssh rsync
 

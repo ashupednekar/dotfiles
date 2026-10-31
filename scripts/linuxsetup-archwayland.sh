@@ -267,7 +267,7 @@ run_step "install_dev_tools" yay -S --needed --noconfirm \
   go python python-pip \
   lua \
   nodejs npm \
-  lazygit \
+  lazygit mkcert \
   podman buildah skopeo \
   kubectl helm aws-cli \
   openssh rsync

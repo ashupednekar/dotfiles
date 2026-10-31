@@ -123,6 +123,7 @@ command -v go      >/dev/null 2>&1 || pkgs="$pkgs golang"
 command -v rustc   >/dev/null 2>&1 || pkgs="$pkgs rustc cargo"
 command -v lua5.4  >/dev/null 2>&1 || pkgs="$pkgs lua5.4"
 command -v node    >/dev/null 2>&1 || pkgs="$pkgs nodejs npm"
+command -v mkcert  >/dev/null 2>&1 || pkgs="$pkgs mkcert libnss3-tools"
 command -v podman  >/dev/null 2>&1 || pkgs="$pkgs podman buildah skopeo"
 sudo apt install -y wget curl unzip rsync openssh-client $pkgs
 '

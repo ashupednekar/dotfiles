@@ -87,6 +87,7 @@ run_step "install_tmux" brew install tmux
 run_step "install_awscli" brew install awscli
 run_step "install_helm" brew install helm
 run_step "install_kubectl" brew install kubectl
+run_step "install_mkcert" brew install mkcert
 run_step "install_switchaudio" brew install switchaudio-osx
 run_step "install_zen_browser" brew install zen-browser
 run_step "install_yabai" brew install koekeishiya/formulae/yabai

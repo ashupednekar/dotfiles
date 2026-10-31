@@ -115,6 +115,8 @@ run_step "dev_tools" sudo apt install -y \
   cargo \
   lua5.4 \
   lazygit \
+  mkcert \
+  libnss3-tools \
   nodejs \
   npm \
   podman \

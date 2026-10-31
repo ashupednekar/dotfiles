@@ -77,6 +77,7 @@ install_packages() {
     google-noto-sans-fonts google-noto-color-emoji-fonts google-noto-cjk-fonts \
     neovim tmux ripgrep fd-find wget curl unzip \
     git gh jq golang python3 python3-pip lua nodejs npm \
+    mkcert nss-tools \
     podman buildah skopeo \
     openssh rsync
 }
